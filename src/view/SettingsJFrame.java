@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,8 +42,10 @@ public class SettingsJFrame extends JFrame {
 
 	public void launch() {
 		this.DefaultValuesToProperties();
+		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 
 		// Posiziona il frame al centro dello schermo
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
 		//-------
@@ -59,10 +63,20 @@ public class SettingsJFrame extends JFrame {
 		this.completeShipsVisibleLabel();
 		this.completeShipsVisibleBox();
 
+		// Close the window without closing the program
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				setVisible(false);
+			}
+		});
+
 		this.addActionListenerToHitComboBox();
 		this.addActionListenerToPlaceComboBox();
 		this.addActionListenerToVisibilityComboBox();
 		this.addActionListenerTopConfirmButton();
+
+
 	}
 
 	private void completeConfirmButton() {

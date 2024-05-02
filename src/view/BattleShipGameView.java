@@ -20,7 +20,7 @@ public class BattleShipGameView {
 	public BattleShipGameView() {
 		gameFrame = new GameFrame();
 		gameFrame.launch(this.askPlayerName());
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
 

@@ -41,7 +41,7 @@ public class GameFrame extends JFrame {
 
 	public void launch(String name) {
 		// Posiziona il frame al centro dello schermo
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
 		//-------
