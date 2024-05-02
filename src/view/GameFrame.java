@@ -40,7 +40,11 @@ public class GameFrame extends JFrame {
 	}
 
 	public void launch(String name) {
+		// Posiziona il frame al centro dello schermo
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
+		this.setLocationRelativeTo(null);
+		//-------
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setTitle("Sea battle");

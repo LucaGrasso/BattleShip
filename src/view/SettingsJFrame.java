@@ -40,7 +40,11 @@ public class SettingsJFrame extends JFrame {
 
 	public void launch() {
 		this.DefaultValuesToProperties();
+
+		// Posiziona il frame al centro dello schermo
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
+		this.setLocationRelativeTo(null);
+		//-------
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setTitle("Settings/Debugging");

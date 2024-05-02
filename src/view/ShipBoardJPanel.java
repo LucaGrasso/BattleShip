@@ -20,14 +20,13 @@ import model.ShipType;
  */
 public class ShipBoardJPanel extends JPanel {
 
-	private JLabel shipsLabel;
-	private final JComboBox<Object> possibleShipsBox;
+    private final JComboBox<Object> possibleShipsBox;
 
     public ShipType selectedShipType = ShipType.AIRCRAFT_CARRIER;
 	public Direction shipDirection = Direction.VERTICAL;
 
 	public ShipBoardJPanel() {
-		this.shipsLabel = new JLabel("Available ships:");
+        JLabel shipsLabel = new JLabel("Available ships:");
 		List<ShipType> listShipTypes = ShipType.getAllShipTypes();
 		this.possibleShipsBox = new JComboBox<>(listShipTypes.toArray());
         JLabel directionLabel = new JLabel("Direction:");

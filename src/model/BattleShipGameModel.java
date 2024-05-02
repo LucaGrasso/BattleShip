@@ -56,11 +56,11 @@ public class BattleShipGameModel {
 		this.getComputerPlayer().setShipsFromStrategy();
 	}
 
-	public List<Integer> getAllComputerShipNummers() {
+	public List<Integer> getComputerPlayerShipNumbers() {
 		return this.getComputerPlayer().getAllShipNumbers();
 	}
 
-	public List<Integer> getAllHumanPlayerShipNummers() {
+	public List<Integer> getAllHumanPlayerShipNumbers() {
 		return this.getHumanPlayer().getAllShipNumbers();
 	}
 

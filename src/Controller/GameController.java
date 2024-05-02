@@ -23,13 +23,13 @@ public class GameController {
 		view = new BattleShipGameView();
 		model = new BattleShipGameModel(view.getPlayerName());
 		view.getGameBoardPanel1().addMouseClickListener(new MouseClickHandler());
-        assert view != null;
+        assert view != null; // assert that view is not null to avoid NullPointerException
         view.getGameFrame().addMouseClickListenerToStartButton(new StartButtonHandler());
-        assert view != null;
-        view.getGameFrame().addMouseClickListenerToSettingsButton(new InstellingenHandler());
+        assert view != null; // assert that view is not null to avoid NullPointerException
+        view.getGameFrame().addMouseClickListenerToSettingsButton(new SettingsHandler());
 	}
 
-	private class InstellingenHandler extends MouseAdapter {
+	private class SettingsHandler extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			if (view.isSettingsButtonEnabled()) {
 				view.disableSettingsButton();
@@ -53,7 +53,7 @@ public class GameController {
 					view.disableGameBoardJPanel1();
 					view.getGameBoardPanel2().addMouseClickListener(new ShootClickHandler());
 					updateNameFieldComputer();
-					updateNamefieldHuman();
+					updateNameFieldHuman();
 					if (view.isSettingsButtonEnabled()) {
 						view.disableSettingsButton();
 					}
@@ -66,35 +66,35 @@ public class GameController {
 
 	private class ShootClickHandler extends MouseAdapter {
 
-		ArrayList<Integer> schepenCijfersComputer = (ArrayList<Integer>) model.getAllComputerShipNummers();
-		ArrayList<Integer> schepenCijfersHumanPlayer = (ArrayList<Integer>) model.getAllHumanPlayerShipNummers();
+		ArrayList<Integer> computerShipNumbers = (ArrayList<Integer>) model.getComputerPlayerShipNumbers();
+		ArrayList<Integer> humanPlayerShipNumbers = (ArrayList<Integer>) model.getAllHumanPlayerShipNumbers();
 
 		public void mouseClicked(MouseEvent event) {
 			int x = event.getX();
 			int y = event.getY();
-			int beginNummer = -1;
+			int beginNumber = -1;
 
 			for (int i = 0; i < view.getGameBoard2Size(); i++) {
 				if (view.isClickedInGameBoard2(i, x, y)) {
-					beginNummer = i;
-					if (!view.getSquareBusyGameBoardPanel2(beginNummer)) {
-						view.setSquareGameBoardPanel2_Occupied(beginNummer);
-						if (schepenCijfersComputer.contains(beginNummer)) {
-							if (model.addHitNumberToComputerShip(beginNummer)) {
+					beginNumber = i;
+					if (!view.getSquareBusyGameBoardPanel2(beginNumber)) {
+						view.setSquareGameBoardPanel2_Occupied(beginNumber);
+						if (computerShipNumbers.contains(beginNumber)) {
+							if (model.addHitNumberToComputerShip(beginNumber)) {
 								for (Integer integer : model.allNumbersfDestroyedShipsOfComputer()) {
 									view.colorShipGameBoardPanel2(integer, Color.RED);
 								}
 							} else {
-								view.colorShipGameBoardPanel2(beginNummer, Color.YELLOW);
+								view.colorShipGameBoardPanel2(beginNumber, Color.YELLOW);
 							}
 
 						} else {
-							view.colorShipGameBoardPanel2(beginNummer, Color.BLUE);
+							view.colorShipGameBoardPanel2(beginNumber, Color.BLUE);
 						}
-						updateNamefieldHuman();
+						updateNameFieldHuman();
 						if (model.getIfGameOverComputer()) {
 							view.showMessage("Game over!\n" + model.getHumanPlayerName() + " won met "
-									+ model.getHumanPlayerScore() + " punten...");
+									+ model.getHumanPlayerScore() + " points...");
 							endGame();
 						} else {
 							this.computerShoots();
@@ -109,7 +109,7 @@ public class GameController {
 		public void computerShoots() {
 			int shot = model.getComputerShot();
 
-			if (schepenCijfersHumanPlayer.contains(shot)) {
+			if (humanPlayerShipNumbers.contains(shot)) {
 				if (model.addHitNumberToHumanPlayerShip(shot)) {
 					for (Integer integer : model.allNumbersfDestroyedShipsOfHumanPlayer()) {
 						view.colorShipGameBoardPanel1(integer, Color.RED);
@@ -123,14 +123,14 @@ public class GameController {
 			updateNameFieldComputer();
 			if (model.getIfGameOverHumanPlayer()) {
 				view.showMessage("Game over!\n" + model.getComputerPlayerName() + " won met "
-						+ model.getComputerPlayerName() + " punten...");
+						+ model.getComputerPlayerName() + " points...");
 				endGame();
 			}
 		}
 
 	}
 
-	public void updateNamefieldHuman() {
+	public void updateNameFieldHuman() {
 		view.updateNameFieldHuman(model.getHumanPlayerName() + " (" + model.getHumanPlayerScore() + "):");
 	}
 
@@ -149,15 +149,15 @@ public class GameController {
 
 				int x = event.getX();
 				int y = event.getY();
-				int beginNummer = -1;
+				int beginNumber = -1;
 				for (int i = 0; i < view.getGameBoard1Size(); i++) {
 					if (view.isClickedInGameBoard1(i, x, y)) {
-						beginNummer = i;
+						beginNumber = i;
 						try {
 							model.addShipToHumanPlayer(view.getSelectedShipType(), view.getSelectedDirection(),
-									beginNummer);
-							for (Integer schipnummer : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
-								view.colorShipGameBoardPanel1(schipnummer, Color.WHITE);
+									beginNumber);
+							for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
+								view.colorShipGameBoardPanel1(shipNumber, Color.WHITE);
 							}
 						} catch (DomainException e) {
 							view.showError(e.getMessage());
@@ -174,8 +174,8 @@ public class GameController {
 	}
 
 	private void showGeneratedShips() {
-		for (Integer nummer : model.getAllComputerShipNummers()) {
-			view.colorShipGameBoardPanel2(nummer, Color.WHITE);
+		for (Integer number : model.getComputerPlayerShipNumbers()) {
+			view.colorShipGameBoardPanel2(number, Color.WHITE);
 		}
 	}
 
