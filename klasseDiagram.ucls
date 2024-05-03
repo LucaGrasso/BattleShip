@@ -253,7 +253,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="29" language="java" name="model.observer.ScoreObserver" project="BattleShip"
+  <class id="29" language="java" name="model.observer.ScoreObserver_obsolete" project="BattleShip"
     file="/BattleShip/src/model/Observer/BerekenScore.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2484" y="1372"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

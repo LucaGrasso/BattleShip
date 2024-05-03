@@ -1,6 +1,7 @@
 package model;
 
 import model.observer.ScoreObserver;
+
 import model.state.GameState;
 import model.state.NewGameState;
 import model.state.StartedGameState;
@@ -23,8 +24,12 @@ public class BattleShipGame {
 	public BattleShipGame(String name) {
 		humanPlayer = new HumanPlayer(name);
 		computerPlayer = new ComputerPlayer();
-		scoreHumanPlayer = new ScoreObserver(humanPlayer);
-		scoreComputerPlayer = new ScoreObserver(computerPlayer);
+		scoreHumanPlayer = new ScoreObserver();
+		scoreComputerPlayer = new ScoreObserver();
+
+		// Aggiungi scoreObserver come listener di humanPlayer e computerPlayer
+		humanPlayer.addScoreListener(scoreHumanPlayer);
+		computerPlayer.addScoreListener(scoreComputerPlayer);
 	}
 
 	public GameState getCurrentGameState() {

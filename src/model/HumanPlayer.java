@@ -1,5 +1,7 @@
 package model;
 
+import model.observer.ScoreListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -9,10 +11,26 @@ import java.util.Observable;
  * @version 1.0
  *
  */
-public class HumanPlayer extends Observable {
+public class HumanPlayer {
 	private String name;
 	private final ArrayList<Ship> ships = new ArrayList<>();
 	public static final int MAX_SHIPS = 5;
+
+	private final List<ScoreListener> scoreListeners = new ArrayList<>();
+
+	public void addScoreListener(ScoreListener listener) {
+		scoreListeners.add(listener);
+	}
+
+	public void removeScoreListener(ScoreListener listener) {
+		scoreListeners.remove(listener);
+	}
+
+	private void notifyScoreListeners() {
+		for (ScoreListener listener : scoreListeners) {
+			listener.onScoreUpdate();
+		}
+	}
 	
 	public HumanPlayer() {
 		this("defaultName");
@@ -51,8 +69,8 @@ public class HumanPlayer extends Observable {
 		}
 		ship.addNumberHit(number);
 		boolean destroyed = ship.getShipNumbersHit().containsAll(ship.getShipNumbers());
-        this.setChanged();
-		this.notifyObservers();
+        //this.setChanged();
+		this.notifyScoreListeners();
 
 		return destroyed;
 	}
@@ -84,6 +102,7 @@ public class HumanPlayer extends Observable {
 			throw new DomainException("Ship was not found!");
 		}
 		shipToAddHitTo.addNumberHit(number);
+		this.notifyScoreListeners();
 	}
 
 	public ArrayList<Ship> getShips() {

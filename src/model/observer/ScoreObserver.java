@@ -1,42 +1,33 @@
+/**
+ * @Author Luca Grasso
+ * @Matricola 294612
+ * @Progetto PMO
+ * @Data 03/05/2024
+ */
+
 package model.observer;
 
-import java.util.Observable;
-import java.util.Observer;
+public class ScoreObserver implements ScoreListener {
+    private int score;
 
-import model.ComputerPlayer;
-import model.HumanPlayer;
+    public ScoreObserver() {
+        this.score = 19;
+    }
 
-/**
- *
- * @author Luca Grasso
- * @version 1.0
- *
- */
-public class ScoreObserver implements Observer {
-	private int score;
+    @Override
+    public void onScoreUpdate() {
+        decreaseScore();
+    }
 
-    public ScoreObserver(Observable observable) {
-		this.score = 19;
-        observable.addObserver(this);
-	}
+    public int getScore() {
+        return score;
+    }
 
-	@Override
-	public void update(Observable observablePlayer, Object arg) {
-		boolean isPlayerInstance = observablePlayer instanceof HumanPlayer || observablePlayer instanceof ComputerPlayer;
-		if (isPlayerInstance) {
-			decreaseScore();
-		}
-	}
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	private void decreaseScore() {
-		this.setScore(score - 1);
-	}
+    private void decreaseScore() {
+        this.setScore(score - 1);
+    }
 }
