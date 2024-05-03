@@ -42,10 +42,9 @@ public class SettingsJFrame extends JFrame {
 
 	public void launch() {
 		this.DefaultValuesToProperties();
-		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 
 		// Posiziona il frame al centro dello schermo
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
 		//-------
@@ -63,19 +62,18 @@ public class SettingsJFrame extends JFrame {
 		this.completeShipsVisibleLabel();
 		this.completeShipsVisibleBox();
 
-		// Close the window without closing the program
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				setVisible(false);
-			}
-		});
 
 		this.addActionListenerToHitComboBox();
 		this.addActionListenerToPlaceComboBox();
 		this.addActionListenerToVisibilityComboBox();
 		this.addActionListenerTopConfirmButton();
 
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+		});
 
 	}
 
@@ -123,7 +121,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	private void addActionListenerTopConfirmButton() {
-		this.confirmButton.addActionListener(e -> setVisible(false));
+		this.confirmButton.addActionListener(e -> this.dispose());
 	}
 
 	private void completeShipsVisibleLabel() {
@@ -171,7 +169,7 @@ public class SettingsJFrame extends JFrame {
             assert in != null;
             in.close();
 		} catch (IOException e) {
-			System.out.println("Kon properties niet laden (Instellingen)");
+			System.out.println("Properties not found! (Institutions)");
 		}
 
 		FileOutputStream out = null;

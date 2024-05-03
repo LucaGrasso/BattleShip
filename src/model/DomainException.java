@@ -5,19 +5,18 @@ package model;
  * @version 1.0
  *
  */
-@SuppressWarnings("serial")
 public class DomainException extends RuntimeException {
 
-	public DomainException(String message, Exception exception) {
-		super(message, exception);
+	public DomainException() {
+		this("DomainException occurred");
 	}
 
 	public DomainException(String message) {
-		super(message);
+		this(message, null);
 	}
 
-	public DomainException() {
-		super();
+	public DomainException(String message, Exception exception) {
+		super(message, exception);
 	}
 
 }

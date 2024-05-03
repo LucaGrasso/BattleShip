@@ -6,21 +6,22 @@ import model.state.NewGameState;
 import model.state.StartedGameState;
 
 /**
- * @author Dries Janse, Marie Verdonck, Bram Van Asschodt
+ * @author Luca Grasso
+ * @version 1.0
  */
 public class BattleShipGame {
-	private HumanPlayer humanPlayer;
-	private ComputerPlayer computerPlayer;
+	private final HumanPlayer humanPlayer;
+	private final ComputerPlayer computerPlayer;
 
-	private ScoreObserver scoreHumanPlayer;
-	private ScoreObserver scoreComputerPlayer;
+	private final ScoreObserver scoreHumanPlayer;
+	private final ScoreObserver scoreComputerPlayer;
 
-	private GameState newGameState = new NewGameState(this);
-	private GameState StartedGameState = new StartedGameState(this);
+	private final GameState newGameState = new NewGameState(this);
+	private final GameState StartedGameState = new StartedGameState(this);
 	private GameState currentGameState = newGameState;
 
-	public BattleShipGame(String naam) {
-		humanPlayer = new HumanPlayer(naam);
+	public BattleShipGame(String name) {
+		humanPlayer = new HumanPlayer(name);
 		computerPlayer = new ComputerPlayer();
 		scoreHumanPlayer = new ScoreObserver(humanPlayer);
 		scoreComputerPlayer = new ScoreObserver(computerPlayer);

@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -20,7 +22,7 @@ public class BattleShipGameView {
 	public BattleShipGameView() {
 		gameFrame = new GameFrame();
 		gameFrame.launch(this.askPlayerName());
-		gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
 
@@ -32,8 +34,18 @@ public class BattleShipGameView {
 
 	public void openSettingsJFrame() {
 		SettingsJFrame = new SettingsJFrame();
-		SettingsJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SettingsJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		SettingsJFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				enableSettingsButton();  // Il pulsante delle impostazioni sarà riabilitato qui
+			}
+		});
 		SettingsJFrame.setVisible(true);
+	}
+
+	public void enableSettingsButton() {
+		this.getGameFrame().enableSettingsButton();
 	}
 
 	public String getPlayerName() {

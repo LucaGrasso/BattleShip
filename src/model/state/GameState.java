@@ -6,6 +6,6 @@ package model.state;
  *
  */
 public interface GameState {
-	public void newGame();
-	public void start();
+	void newGame();
+	void start();
 }

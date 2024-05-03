@@ -41,7 +41,6 @@ public class GameFrame extends JFrame {
 
 	public void launch(String name) {
 		// Posiziona il frame al centro dello schermo
-		//this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
 		//-------
@@ -59,6 +58,7 @@ public class GameFrame extends JFrame {
 
 		this.setStartButton();
 		this.setSettingsButton();
+
 	}
 
 	private void setSettingsButton() {
@@ -74,6 +74,10 @@ public class GameFrame extends JFrame {
 		this.startButton.setSize(new Dimension(350, 40));
 		this.add(startButton);
 
+	}
+
+	public void enableSettingsButton() {
+		this.settingsButton.setEnabled(true);
 	}
 
 	public void addMouseClickListenerToStartButton(MouseListener listener) {
