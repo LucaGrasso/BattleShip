@@ -7,7 +7,7 @@ package model.strategy;
  */
 public interface HitShipStrategy { ;
 
-	int hitShip();
+	int getHitPositionShip();
 
 	void setLastHitSuccessful(boolean _lastHitWasSuccessful);
 

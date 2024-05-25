@@ -5,12 +5,12 @@ package model.strategy;
  * @version 1.0
  *
  */
-public class OrderedHitStrategy implements HitShipStrategy {
+public class OrderedHitShipStrategy implements HitShipStrategy {
 
 	private int lastInteger = -1;
 
 	@Override
-	public int hitShip() {
+	public int getHitPositionShip() {
 		if (lastInteger < 99) {
 			lastInteger++;
 		}
