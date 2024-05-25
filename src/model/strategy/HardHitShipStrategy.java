@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 
+
 public class HardHitShipStrategy implements HitShipStrategy {
     private final List<Integer> hitPositionsList = new ArrayList<>();
     private Integer lastHit = null;
@@ -40,10 +41,19 @@ public class HardHitShipStrategy implements HitShipStrategy {
         // }
         // se abbiamo colpito una nave, cerchiamo in quella direzione
 
+        if (firstHitShip && isLastHitSuccessful) {
+
+
+            result = getAroundLastHit(lastHit);
+
+        }
+
+
         if (lastHit != null && isLastHitSuccessful) {
             // Ho colpito una nave per la prima volta
             if (!firstHitShip) firstHitShip = true;
             // verificare se possiamo colpire in quella direzione
+            hitDirection = lastHit;
             result = getAroundLastHit(lastHit);
         }
 
@@ -72,16 +82,67 @@ public class HardHitShipStrategy implements HitShipStrategy {
 
 
     private int getAroundLastHit(int lastHit){
+        Random random = new Random();
+        String[] directions = {"up", "down", "right", "left"};
+        int rowDigit ;
+        int columDigit;
 
-        int firstDigit = Math.abs(lastHit / 10);
-        int secondDigit = Math.abs(lastHit % 10);
+        int index = random.nextInt(directions.length);
 
-        return lastHit;
+        if(lastHit >= 0 && lastHit <= 9) {
+            rowDigit = lastHit;
+
+            // Border Left of Game
+            switch (directions[index]) {
+                case "up":
+                    return  (rowDigit == 0) ? --rowDigit : ++rowDigit;
+                case "down":
+                    return  (rowDigit == 9) ? ++rowDigit : --rowDigit;
+                case "right", "left":
+                    return 10 + rowDigit;
+            }
+
+        } else {
+
+            rowDigit   = Math.abs(lastHit % 10);   // 0-9
+            columDigit = Math.abs(lastHit / 10);   // 0-9
+
+            switch (directions[index]) {
+                case "up":
+                    if (rowDigit == 0) return  ++rowDigit  + columDigit * 10;
+                    return  --rowDigit  + columDigit * 10;
+                case "down":
+                    if (rowDigit == 9) return  --rowDigit  + columDigit * 10;
+                    return  ++rowDigit  + columDigit * 10;
+                case "right":
+                    if (columDigit == 9) return  rowDigit  + --columDigit * 10;
+                    return  rowDigit  + ++columDigit * 10;
+                case "left":
+                    if (columDigit == 1) return  rowDigit;
+                    return  rowDigit  + ++columDigit * 10;
+            }
+        }
+
+        return -1;
     }
 
 
+    public int[] compareDigits(int hitDirection, int lastHit) {
+        //initialize with -1 to denote "no match"
+        int[] result = {-1, -1}; // array to hold the result,
 
+        int firstDigitDirection = Math.abs(hitDirection / 10);
+        int secondDigitDirection = Math.abs(hitDirection % 10);
 
+        int firstDigitLastHit = Math.abs(lastHit / 10);
+        int secondDigitLastHit = Math.abs(lastHit % 10);
 
+        if (firstDigitDirection == firstDigitLastHit) {
+            result[0] = firstDigitDirection;
+        } else if (secondDigitDirection == secondDigitLastHit) {
+            result[1] = secondDigitDirection;
+        }
+        return result;
+    }
 
 }
