@@ -30,6 +30,8 @@ public class PlaceShipFactory {
 		this.properties = readPropertiesFile();
 	}
 
+
+
 	private Properties readPropertiesFile() {
 		Properties properties = new Properties();
 		try (InputStream input = new FileInputStream("src/strategyProperties.properties")) {
