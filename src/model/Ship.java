@@ -170,4 +170,12 @@ public class Ship {
 		return shipType;
 	}
 
+	/**
+	 * Check if the ship is sunk
+	 * @return true if the ship is sunk
+	 */
+	public boolean isSunk() {
+		return shipNumbers.size() == shipNumbersHit.size();
+	}
+
 }

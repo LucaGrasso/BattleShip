@@ -55,9 +55,6 @@ public class HitShipFactory {
     private HitShipStrategy createStrategyInstance(Properties properties){
         String className = properties.getProperty("hitShipStrategy");
         try {
-
-
-
             Class<?> hitShipStrategyClass = Class.forName(className);
             return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
 

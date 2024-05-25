@@ -138,7 +138,7 @@ public class BattleShipGameView {
 	}
 
 	public void updateNameFieldHuman(String n) {
-		this.getGameFrame().updateNameFieldHuman(n);
+ 		this.getGameFrame().updateNameFieldHuman(n);
 	}
 
 	public void updateNameFieldComputer(String n) {
