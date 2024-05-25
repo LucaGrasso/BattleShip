@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.swing.JButton;
@@ -99,7 +100,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	private void addActionListenerToHitComboBox() {
-		this.hitComboBox.addActionListener(e -> writeHitToProperties(((HitStrategy) hitComboBox.getSelectedItem()).getFullClassName()));
+		this.hitComboBox.addActionListener(_ -> writeHitToProperties(((HitStrategy) Objects.requireNonNull(hitComboBox.getSelectedItem())).getFullClassName()));
 	}
 
 	private void completeBoxPlaceStrategy() {
@@ -117,11 +118,11 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	private void addActionListenerToPlaceComboBox() {
-		this.placeComboBox.addActionListener(e -> writePlaceToProperties(((PlaceStrategy) placeComboBox.getSelectedItem()).getFullClassName()));
+		this.placeComboBox.addActionListener(_ -> writePlaceToProperties(((PlaceStrategy) Objects.requireNonNull(placeComboBox.getSelectedItem())).getFullClassName()));
 	}
 
 	private void addActionListenerTopConfirmButton() {
-		this.confirmButton.addActionListener(e -> this.dispose());
+		this.confirmButton.addActionListener(_ -> this.dispose());
 	}
 
 	private void completeShipsVisibleLabel() {
@@ -140,7 +141,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	private void addActionListenerToVisibilityComboBox() {
-		this.shipVisibilityBox.addActionListener(e -> {
+		this.shipVisibilityBox.addActionListener(_ -> {
             String selected = (String) shipVisibilityBox.getSelectedItem();
             assert selected != null;
             isShipsVisible = selected.equals("YES");

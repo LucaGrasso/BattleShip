@@ -23,36 +23,32 @@ import model.strategy.PlaceShipStrategy;
 
 
 public class PlaceShipFactory {
+    private final Properties properties;
 
-	private final Properties properties;
+    public PlaceShipFactory() {
+        this.properties = readPropertiesFile("src/strategyProperties.properties");
+    }
 
-	public PlaceShipFactory() {
-		this.properties = readPropertiesFile();
-	}
+    private Properties readPropertiesFile(String filePath) {
+        Properties properties = new Properties();
+        try (InputStream input = new FileInputStream(filePath)) {
+            properties.load(input);
+        } catch (IOException e) {
+            throw new DomainException("Cannot read properties file: " + filePath, e);
+        }
+        return properties;
+    }
 
+    public PlaceShipStrategy getPlaceShipStrategy() {
+        String className = properties.getProperty("placeShipStrategy");
+        return createStrategyInstance(className);
+    }
 
-
-	private Properties readPropertiesFile() {
-		Properties properties = new Properties();
-		try (InputStream input = new FileInputStream("src/strategyProperties.properties")) {
-			properties.load(input);
-		} catch (IOException e) {
-			throw new DomainException("Properties file not found");
-		}
-		return properties;
-	}
-
-	public PlaceShipStrategy getPlaceShipStrategy() {
-		String className = properties.getProperty("placeShipStrategy");
-		return createStrategyInstance(className);
-	}
-
-	private PlaceShipStrategy createStrategyInstance(String className) {
-		try {
-			Class<?> strategyClass = Class.forName(className);
-			return (PlaceShipStrategy) strategyClass.getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			throw new DomainException("strategy not found (PlaceShipFactory)", e);
-		}
-	}
+    private PlaceShipStrategy createStrategyInstance(String className) {
+        try {
+            return (PlaceShipStrategy) Class.forName(className).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new DomainException("Failed to create strategy instance for className: " + className, e);
+        }
+    }
 }

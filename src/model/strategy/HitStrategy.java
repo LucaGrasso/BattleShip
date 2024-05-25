@@ -10,7 +10,9 @@ package model.strategy;
 // The fullClassName attribute is used to get the full class name of the strategy.
 
 public enum HitStrategy {
-	RANDOM("model.strategy.RandomHitShipStrategy"), ORDERED("model.strategy.OrderedHitStrategy"), HARD("model.strategy.HardHitStrategy");
+	RANDOM("model.strategy.RandomHitShipStrategy"),
+	ORDERED("model.strategy.OrderedHitStrategy"),
+	HARD("model.strategy.HardHitStrategy");
 
 	private final String fullClassName;
 
