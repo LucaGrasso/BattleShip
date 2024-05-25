@@ -113,12 +113,15 @@ public class GameController {
 				if (model.addHitNumberToHumanPlayerShip(shot)) {
 					for (Integer integer : model.allNumbersOfDestroyedShipsOfHumanPlayer()) {
 						view.colorShipGameBoardPanel1(integer, Color.RED);
+						model.setIsShipSunk(true);
 					}
 				} else {
 					view.colorShipGameBoardPanel1(shot, Color.YELLOW);
+					model.setLastHitSuccessful(true);
 				}
 			} else {
 				view.colorShipGameBoardPanel1(shot, Color.BLUE);
+				model.setLastHitSuccessful(false);
 			}
 			updateNameFieldComputer();
 			if (model.getIfGameOverHumanPlayer()) {

@@ -5,6 +5,11 @@ package model.strategy;
  * @version 1.0
  *
  */
-public interface HitShipStrategy {
-		int hitShip();
+public interface HitShipStrategy { ;
+
+	int hitShip();
+
+	void setLastHitSuccessful(boolean _lastHitWasSuccessful);
+
+	void setIsShipSunk(boolean _isShipSunk);
 }

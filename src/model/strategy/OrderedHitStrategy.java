@@ -18,4 +18,14 @@ public class OrderedHitStrategy implements HitShipStrategy {
 
 	}
 
+	@Override
+	public void setLastHitSuccessful(boolean _lastHitWasSuccessful) {
+
+	}
+
+	@Override
+	public void setIsShipSunk(boolean _isShipSunk) {
+
+	}
+
 }

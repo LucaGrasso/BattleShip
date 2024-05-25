@@ -96,6 +96,14 @@ public class BattleShipGameModel {
 		return this.getGame().getComputerPlayer().hitShip();
 	}
 
+	public void setLastHitSuccessful(boolean lastShot) {
+		this.getGame().getComputerPlayer().setLastHitSuccessful(lastShot);
+	}
+
+	public void setIsShipSunk(boolean isShipSunk) {
+		this.getGame().getComputerPlayer().setIsShipSunk(isShipSunk);
+	}
+
 	public int getHumanPlayerScore() {
 		return this.getGame().getScoreHumanPlayer().getScore();
 	}

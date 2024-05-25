@@ -29,4 +29,14 @@ public class RandomHitShipStrategy implements HitShipStrategy {
 		return result;
 	}
 
+	@Override
+	public void setLastHitSuccessful(boolean _lastHitWasSuccessful) {
+
+	}
+
+	@Override
+	public void setIsShipSunk(boolean _isShipSunk) {
+
+	}
+
 }
