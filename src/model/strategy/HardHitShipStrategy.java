@@ -7,10 +7,7 @@
 
 package model.strategy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class HardHitShipStrategy implements HitShipStrategy {
@@ -35,23 +32,25 @@ public class HardHitShipStrategy implements HitShipStrategy {
         this.isShipSunk = isShipSunk;
     }
 
+    private void getReset() {
+        hitDirection = 0;
+        isLastHitSuccessful = false;
+        isShipSunk = false;
+        firstHitShip = false;
+        shipOrientation = null;
+        rowDirection = -1;
+        columnDirection = -1;
+        sequenceDigits = new ArrayList<>();
+    }
+
     @Override
     public int getHitPositionShip() {
         int result = -1;
 
-
         // Se la nave è affondata, resettiamo la strategia
         if (isShipSunk) {
-            hitDirection = 0;
-            isLastHitSuccessful = false;
-            isShipSunk = false;
-            firstHitShip = false;
-            shipOrientation = null;
-            rowDirection = -1;
-            columnDirection = -1;
-            sequenceDigits = null;
+            getReset();
         }
-
 
         // Ho colpito due volte la stessa nave
         if (firstHitShip && isLastHitSuccessful) {
@@ -60,53 +59,60 @@ public class HardHitShipStrategy implements HitShipStrategy {
                 if (digitsForDirection[0] != -1) {
                     shipOrientation = "vertical";
                     columnDirection = digitsForDirection[0];
-                    int[] temp = sequenceDigits(hitDirection, lastHit);
-                    sequenceDigits.add(temp[0]);
-                    sequenceDigits.add(temp[1]);
-                    int hitTemp = 0;
-                    while (result == -1) {
-                        hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
-                        result = addHitPosition(columnDirection * 10 + hitTemp);
-                    }
-                    sequenceDigits.add(hitTemp);
+                    result = tryHitShip(hitDirection, lastHit);
                 }
                 if (digitsForDirection[1] != -1) {
                     shipOrientation = "horizontal";
                     rowDirection = digitsForDirection[1];
-                    int[] temp = sequenceDigits(hitDirection, lastHit);
-                    sequenceDigits.add(temp[0]);
-                    sequenceDigits.add(temp[1]);
-                    int hitTemp = 0;
-                    while (result == -1) {
-                        hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
-                        result = addHitPosition( hitTemp * 10 + rowDirection);
-                    }
-                    sequenceDigits.add(hitTemp);
+                    result = tryHitShip(hitDirection, lastHit);
                 }
             } else {
                 if (shipOrientation.equals("horizontal")) {
-                    int[] tempSeq = new int[sequenceDigits.size()];
-                    for (int i = 0; i < sequenceDigits.size(); i++) {
-                        tempSeq[i] = sequenceDigits.get(i);
+                    int[] tempSeq = convertListToArray(sequenceDigits);
+                    int hitTemp = 0;
+                    while (result == -1) {
+                        hitTemp = getRandomAdjacent(tempSeq);
+                        result = addHitPosition(hitTemp * 10 + rowDirection);
                     }
-                    int temp = getRandomAdjacent(tempSeq);
-                    result = temp * 10 + rowDirection;
-                    addHitPosition(result);
+                    sequenceDigits.add(hitTemp);
+
                 } else if (shipOrientation.equals("vertical")) {
-                    int[] tempSeq = new int[sequenceDigits.size()];
-                    for (int i = 0; i < sequenceDigits.size(); i++) {
-                        tempSeq[i] = sequenceDigits.get(i);
+                    int[] tempSeq = convertListToArray(sequenceDigits);
+                    int hitTemp = 0;
+                    while (result == -1) {
+                        hitTemp = getRandomAdjacent(tempSeq);
+                        result = addHitPosition(columnDirection * 10 + hitTemp);
                     }
-                    int temp = getRandomAdjacent(tempSeq);
-                    result = columnDirection * 10 + temp;
-                    addHitPosition(result);
+                    sequenceDigits.add(hitTemp);
                 }
             }
+
         } else if (firstHitShip) {
-            while (result == -1) {
-                int temp = getAroundLastHit(hitDirection);
-                result = addHitPosition(temp);
+            if (shipOrientation == null) {
+                while (result == -1) {
+                    int temp = getAroundLastHit(hitDirection);
+                    result = addHitPosition(temp);
+                }
+            } else if (shipOrientation.equals("horizontal")) {
+                int[] tempSeq = convertListToArray(sequenceDigits);
+                int hitTemp = 0;
+                while (result == -1) {
+                    hitTemp = getRandomAdjacent(tempSeq);
+                    result = addHitPosition(hitTemp * 10 + rowDirection);
+                }
+                sequenceDigits.add(hitTemp);
+
+            } else if (shipOrientation.equals("vertical")) {
+                int[] tempSeq = convertListToArray(sequenceDigits);
+                int hitTemp = 0;
+                while (result == -1) {
+                    hitTemp = getRandomAdjacent(tempSeq);
+                    result = addHitPosition(columnDirection * 10 + hitTemp);
+                }
+                sequenceDigits.add(hitTemp);
             }
+
+
         }
 
 
@@ -145,7 +151,6 @@ public class HardHitShipStrategy implements HitShipStrategy {
         }
         return -1;
     }
-
 
     private int getAroundLastHit(int lastHit) {
         Random random = new Random();
@@ -192,7 +197,6 @@ public class HardHitShipStrategy implements HitShipStrategy {
         return -1;
     }
 
-
     private static int getRandomAdjacent(int[] sequence) {
 
         // Sort the array and find the min and max
@@ -224,7 +228,6 @@ public class HardHitShipStrategy implements HitShipStrategy {
         int index = rand.nextInt(options.size());
         return options.get(index);
     }
-
 
     /**
      * Compare the digits of the hitDirection with the currentHit
@@ -273,4 +276,26 @@ public class HardHitShipStrategy implements HitShipStrategy {
         return result;
     }
 
+    private int tryHitShip(int hitDirection, int lastHit) {
+        int result = -1;
+        int[] sequenceDigitsResult = sequenceDigits(hitDirection, lastHit);
+        sequenceDigits.add(sequenceDigitsResult[0]);
+        sequenceDigits.add(sequenceDigitsResult[1]);
+        int hitTemp = 0;
+        while (result == -1) {
+            hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
+            if (Objects.equals(shipOrientation, "vertical")) result = addHitPosition(columnDirection * 10 + hitTemp);
+            if (Objects.equals(shipOrientation, "horizontal")) result = addHitPosition(hitTemp * 10 + rowDirection);
+        }
+        sequenceDigits.add(hitTemp);
+        return result;
+    }
+
+    private int[] convertListToArray(List<Integer> list) {
+        int[] numArray = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            numArray[i] = list.get(i);
+        }
+        return numArray;
+    }
 }
