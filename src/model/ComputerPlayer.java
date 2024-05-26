@@ -33,7 +33,15 @@ public class ComputerPlayer extends HumanPlayer {
 	}
 
 	public int hitShip() {
-		return hitShipStrategy.hitShip();
+		return hitShipStrategy.getHitPositionShip();
+	}
+
+	public void setLastHitSuccessful(boolean hitSuccessful) {
+		hitShipStrategy.setLastHitSuccessful(hitSuccessful);
+	}
+
+	public void setIsShipSunk(boolean isShipSunk) {
+		hitShipStrategy.setIsShipSunk(isShipSunk);
 	}
 
 	public void readHitStrategyFromProp() {

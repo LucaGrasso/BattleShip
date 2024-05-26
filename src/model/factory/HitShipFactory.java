@@ -52,13 +52,24 @@ public class HitShipFactory {
 		return properties;
 	}
 
-	private HitShipStrategy createStrategyInstance(Properties properties) {
-		String className = properties.getProperty("hitShipStrategy");
-		try {
-			Class<?> hitShipStrategyClass = Class.forName(className);
-			return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
+    private HitShipStrategy createStrategyInstance(Properties properties){
+        String className = properties.getProperty("hitShipStrategy");
+        try {
+            Class<?> hitShipStrategyClass = Class.forName(className);
+            return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
+
+        } catch (ClassNotFoundException e) {
+            // La classe non esiste allora ritorno la classe RandomHitShipStrategy che è la classe di default
+			try {
+				System.out.println("For hitShipStrategy --" + className + " is an invalid setup.");
+				Class<?> hitShipStrategyClass = Class.forName("model.strategy.RandomHitShipStrategy");
+				return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
+			} catch (Exception e1) {
+				throw new DomainException("strategy not found (HitShipFactory)", e1);
+			}
+
 		} catch (Exception e) {
-			throw new DomainException("strategy not found (PlaceShipFactory)", e);
+			throw new DomainException("strategy not found (HitShipFactory)", e);
 		}
 	}
 }

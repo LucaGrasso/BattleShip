@@ -13,7 +13,7 @@ public class RandomHitShipStrategy implements HitShipStrategy {
 	private final List<Integer> alreadyHit = new ArrayList<>();
 
 	@Override
-	public int hitShip() {
+	public int getHitPositionShip() {
 		int result = -1;
 
 		while (result == -1) {
@@ -27,6 +27,16 @@ public class RandomHitShipStrategy implements HitShipStrategy {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public void setLastHitSuccessful(boolean _lastHitWasSuccessful) {
+
+	}
+
+	@Override
+	public void setIsShipSunk(boolean _isShipSunk) {
+
 	}
 
 }

@@ -32,7 +32,7 @@ public class GameFrame extends JFrame {
 	public final static int HEIGHT_FRAME = 500; // At least 400
 	public final static int WIDTH_FRAME = (int) (HEIGHT_FRAME * 2.5);
 	public final static int PANEL_SIZE = (int) (HEIGHT_FRAME * 4 / 5);
-	public final static int AANTAL_RIJEN = 10;
+	public final static int NUM_COLUMNS = 10;
 	public boolean tryToStart = false;
 
 	public GameFrame() {
@@ -96,7 +96,7 @@ public class GameFrame extends JFrame {
 	}
 
 	private void completeSettingsGameBoardPanel1() {
-		panel1 = new GameBoardJPanel((PANEL_SIZE / AANTAL_RIJEN), AANTAL_RIJEN);
+		panel1 = new GameBoardJPanel((PANEL_SIZE / NUM_COLUMNS), NUM_COLUMNS);
 		panel1.setBackground(Color.GRAY);
 		panel1.setSize(new Dimension(PANEL_SIZE, PANEL_SIZE));
 		panel1.setLocation(PANEL_SIZE, 50);
@@ -106,7 +106,7 @@ public class GameFrame extends JFrame {
 
 
 	private void completeSettingsGameBoardPanel2() {
-		panel2 = new GameBoardJPanel((PANEL_SIZE / AANTAL_RIJEN), AANTAL_RIJEN);
+		panel2 = new GameBoardJPanel((PANEL_SIZE / NUM_COLUMNS), NUM_COLUMNS);
 		panel2.setBackground(Color.GRAY);
 		panel2.setSize(new Dimension(PANEL_SIZE, PANEL_SIZE));
 		panel2.setLocation(2 * PANEL_SIZE + 25, 50);

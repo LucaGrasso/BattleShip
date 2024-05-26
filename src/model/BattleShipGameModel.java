@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class BattleShipGameModel {
 
-	private BattleShipGame game;
+	private final BattleShipGame game;
 
-	public BattleShipGameModel(String naam) {
-		this.game = new BattleShipGame(naam);
+	public BattleShipGameModel(String playerName) {
+		this.game = new BattleShipGame(playerName);
 	}
 
-	public void setHumanPlayerName(String naam) {
-		this.getHumanPlayer().setName(naam);
+	public void setHumanPlayerName(String playerName) {
+		this.getHumanPlayer().setName(playerName);
 	}
 
 	public String getHumanPlayerName() {
@@ -28,7 +28,7 @@ public class BattleShipGameModel {
 		return this.getComputerPlayer().getName();
 	}
 
-	public ArrayList<Ship> getHumanPlayerShepen() {
+	public ArrayList<Ship> getHumanPlayerShip() {
 		return this.getHumanPlayer().getShips();
 	}
 
@@ -36,8 +36,8 @@ public class BattleShipGameModel {
 		this.getHumanPlayer().addShip(ship);
 	}
 
-	public void addShipToHumanPlayer(ShipType schipType, Direction richting, int beginVakje) {
-		this.getHumanPlayer().addShip(schipType, richting, beginVakje);
+	public void addShipToHumanPlayer(ShipType shipType, Direction shipDirection, int shipPositionX) {
+		this.getHumanPlayer().addShip(shipType, shipDirection, shipPositionX);
 	}
 
 	public HumanPlayer getHumanPlayer() {
@@ -64,12 +64,12 @@ public class BattleShipGameModel {
 		return this.getHumanPlayer().getAllShipNumbers();
 	}
 
-	public boolean addHitNumberToComputerShip(int nummer) {
-		return this.getComputerPlayer().addHitToShip(nummer);
+	public boolean addHitNumberToComputerShip(int number) {
+		return this.getComputerPlayer().addHitToShip(number);
 	}
 
-	public boolean addHitNumberToHumanPlayerShip(int nummer) {
-		return this.getHumanPlayer().addHitToShip(nummer);
+	public boolean addHitNumberToHumanPlayerShip(int hitNumber) {
+		return this.getHumanPlayer().addHitToShip(hitNumber);
 	}
 
 	public BattleShipGame getGame() {
@@ -84,16 +84,24 @@ public class BattleShipGameModel {
 		this.getGame().newGame();
 	}
 
-	public ArrayList<Integer> allNumbersfDestroyedShipsOfComputer() {
+	public ArrayList<Integer> allNumbersOfDestroyedShipsOfComputer() {
 		return this.getComputerPlayer().allNumbersOfDestroyedShips();
 	}
 
-	public ArrayList<Integer> allNumbersfDestroyedShipsOfHumanPlayer() {
+	public ArrayList<Integer> allNumbersOfDestroyedShipsOfHumanPlayer() {
 		return this.getHumanPlayer().allNumbersOfDestroyedShips();
 	}
 
 	public int getComputerShot() {
 		return this.getGame().getComputerPlayer().hitShip();
+	}
+
+	public void setLastHitSuccessful(boolean lastShot) {
+		this.getGame().getComputerPlayer().setLastHitSuccessful(lastShot);
+	}
+
+	public void setIsShipSunk(boolean isShipSunk) {
+		this.getGame().getComputerPlayer().setIsShipSunk(isShipSunk);
 	}
 
 	public int getHumanPlayerScore() {

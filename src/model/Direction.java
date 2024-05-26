@@ -1,7 +1,8 @@
 package model;
 /**
  * 
- *@author Dries Janse, Marie Verdonck, Bram Van Asschodt
+ *@author Luca Grasso
+ *@version 1.0
  *
  */
 public enum Direction {

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -81,7 +81,7 @@ public class GameController {
 						view.setSquareGameBoardPanel2_Occupied(beginNumber);
 						if (computerShipNumbers.contains(beginNumber)) {
 							if (model.addHitNumberToComputerShip(beginNumber)) {
-								for (Integer integer : model.allNumbersfDestroyedShipsOfComputer()) {
+								for (Integer integer : model.allNumbersOfDestroyedShipsOfComputer()) {
 									view.colorShipGameBoardPanel2(integer, Color.RED);
 								}
 							} else {
@@ -111,14 +111,17 @@ public class GameController {
 
 			if (humanPlayerShipNumbers.contains(shot)) {
 				if (model.addHitNumberToHumanPlayerShip(shot)) {
-					for (Integer integer : model.allNumbersfDestroyedShipsOfHumanPlayer()) {
+					for (Integer integer : model.allNumbersOfDestroyedShipsOfHumanPlayer()) {
 						view.colorShipGameBoardPanel1(integer, Color.RED);
+						model.setIsShipSunk(true);
 					}
 				} else {
 					view.colorShipGameBoardPanel1(shot, Color.YELLOW);
+					model.setLastHitSuccessful(true);
 				}
 			} else {
 				view.colorShipGameBoardPanel1(shot, Color.BLUE);
+				model.setLastHitSuccessful(false);
 			}
 			updateNameFieldComputer();
 			if (model.getIfGameOverHumanPlayer()) {

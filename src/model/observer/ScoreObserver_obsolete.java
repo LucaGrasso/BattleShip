@@ -6,12 +6,15 @@ import java.util.Observer;
 import model.ComputerPlayer;
 import model.HumanPlayer;
 
-/**
+/** Deprecated class
  *
  * @author Luca Grasso
- * @version 1.0
+ *
  *
  */
+
+// This class is not used in the project
+// It is an example of an observer that listens to the score changes of a player
 public class ScoreObserver_obsolete implements Observer {
 	private int score;
 

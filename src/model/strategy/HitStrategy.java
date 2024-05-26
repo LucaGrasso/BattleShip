@@ -5,8 +5,14 @@ package model.strategy;
  * @version 1.0
  *
  */
+
+// This enum is used to define the different strategies that the computer player can use to hit the ships
+// The fullClassName attribute is used to get the full class name of the strategy.
+
 public enum HitStrategy {
-	RANDOM("model.strategy.RandomHitShipStrategy"), ORDERED("model.strategy.OrderedHitStrategy");
+	RANDOM("model.strategy.RandomHitShipStrategy"),
+	ORDERED("model.strategy.OrderedHitShipStrategy"),
+	HARD("model.strategy.HardHitShipStrategy");
 
 	private final String fullClassName;
 

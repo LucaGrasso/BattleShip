@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  */
 
 public class GameBoardJPanel extends JPanel {
-	private final List<Square> gameSquares = new ArrayList<Square>();
+	private final List<Square> gameSquares = new ArrayList<>();
 
 	public GameBoardJPanel(int squareLength, int boardSize) {
 		int y = 0;
@@ -36,9 +36,9 @@ public class GameBoardJPanel extends JPanel {
 		return gameSquares;
 	}
 
-	public void setColor(int nr, Color kleur) {
-		gameSquares.get(nr).setBorderColor(kleur);
-		gameSquares.get(nr).setColor(kleur);
+	public void setColor(int nr, Color squareBorderColor) {
+		gameSquares.get(nr).setBorderColor(squareBorderColor);
+		gameSquares.get(nr).setColor(squareBorderColor);
 		this.repaint();
 	}
 
