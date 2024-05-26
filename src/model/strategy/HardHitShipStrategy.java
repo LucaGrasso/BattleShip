@@ -20,10 +20,10 @@ public class HardHitShipStrategy implements HitShipStrategy {
     private boolean isLastHitSuccessful = false;
     private boolean isShipSunk = false;
     private boolean firstHitShip = false;
-    private String direction = null;
+    private String shipOrientation = null;
     private int rowDirection = -1;
     private int columnDirection = -1;
-    private ArrayList<Integer> sequence = null;
+    private List<Integer> sequenceDigits = new ArrayList<>();
 
     @Override
     public void setLastHitSuccessful(boolean isLastHitSuccessful) {
@@ -42,82 +42,86 @@ public class HardHitShipStrategy implements HitShipStrategy {
 
         // Se la nave è affondata, resettiamo la strategia
         if (isShipSunk) {
-            hitDirection = null;
+            hitDirection = 0;
             isLastHitSuccessful = false;
             isShipSunk = false;
             firstHitShip = false;
-            direction = null;
+            shipOrientation = null;
             rowDirection = -1;
             columnDirection = -1;
-            sequence = null;
+            sequenceDigits = null;
         }
 
 
         // Ho colpito due volte la stessa nave
         if (firstHitShip && isLastHitSuccessful) {
-            if (direction.isEmpty()) {
+            if (shipOrientation == null) {
                 int[] digitsForDirection = compareDigits(hitDirection, lastHit);
-                this.sequence = new ArrayList<>(Arrays.asList(hitDirection, lastHit));
                 if (digitsForDirection[0] != -1) {
-                    direction = "vertical";
-                    this.columnDirection = digitsForDirection[0];
+                    shipOrientation = "vertical";
+                    columnDirection = digitsForDirection[0];
+                    int[] temp = sequenceDigits(hitDirection, lastHit);
+                    sequenceDigits.add(temp[0]);
+                    sequenceDigits.add(temp[1]);
+                    int hitTemp = 0;
+                    while (result == -1) {
+                        hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
+                        result = addHitPosition(columnDirection * 10 + hitTemp);
+                    }
+                    sequenceDigits.add(hitTemp);
                 }
                 if (digitsForDirection[1] != -1) {
-                    direction = "horizontal";
-                    this.rowDirection = digitsForDirection[1];
+                    shipOrientation = "horizontal";
+                    rowDirection = digitsForDirection[1];
+                    int[] temp = sequenceDigits(hitDirection, lastHit);
+                    sequenceDigits.add(temp[0]);
+                    sequenceDigits.add(temp[1]);
+                    int hitTemp = 0;
+                    while (result == -1) {
+                        hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
+                        result = addHitPosition( hitTemp * 10 + rowDirection);
+                    }
+                    sequenceDigits.add(hitTemp);
+                }
+            } else {
+                if (shipOrientation.equals("horizontal")) {
+                    int[] tempSeq = new int[sequenceDigits.size()];
+                    for (int i = 0; i < sequenceDigits.size(); i++) {
+                        tempSeq[i] = sequenceDigits.get(i);
+                    }
+                    int temp = getRandomAdjacent(tempSeq);
+                    result = temp * 10 + rowDirection;
+                    addHitPosition(result);
+                } else if (shipOrientation.equals("vertical")) {
+                    int[] tempSeq = new int[sequenceDigits.size()];
+                    for (int i = 0; i < sequenceDigits.size(); i++) {
+                        tempSeq[i] = sequenceDigits.get(i);
+                    }
+                    int temp = getRandomAdjacent(tempSeq);
+                    result = columnDirection * 10 + temp;
+                    addHitPosition(result);
                 }
             }
-
-            int[] sequenceD = sequenceDigits(hitDirection, lastHit);
-            if (direction.equals("horizontal")) {
-
-
-                // Cerchiamo in orizzontale
-                if (lastHit % 10 == 0) {
-                    // Se siamo al bordo sinistro, cerchiamo a destra
-                    result = lastHit + 1;
-                } else if (lastHit % 10 == 9) {
-                    // Se siamo al bordo destro, cerchiamo a sinistra
-                    result = lastHit - 1;
-                } else {
-                    // Cerchiamo a destra
-                    result = lastHit + 1;
-                }
-            } else if (direction.equals("vertical")) {
-                // Cerchiamo in verticale
-                if (lastHit / 10 == 0) {
-                    // Se siamo al bordo superiore, cerchiamo in basso
-                    result = lastHit + 10;
-                } else if (lastHit / 10 == 9) {
-                    // Se siamo al bordo inferiore, cerchiamo in alto
-                    result = lastHit - 10;
-                } else {
-                    // Cerchiamo in basso
-                    result = lastHit + 10;
-                }
+        } else if (firstHitShip) {
+            while (result == -1) {
+                int temp = getAroundLastHit(hitDirection);
+                result = addHitPosition(temp);
             }
-
-
         }
 
 
-
-        if (lastHit != null && isLastHitSuccessful) {
+        if (lastHit != null && isLastHitSuccessful && result == -1) {
             // Ho colpito una nave per la prima volta
             if (!firstHitShip) firstHitShip = true;
             // verificare se possiamo colpire in quella direzione
             this.hitDirection = lastHit;
-            result = getAroundLastHit(lastHit);
-            // Aggiungo alla lista di hit
-            addHitPosition(result);
+            while (result == -1) {
+                // Generiamo un numero casuale (0-99
+                int temp = getAroundLastHit(lastHit);
+                // Aggiungo alla lista di hit
+                result = addHitPosition(temp);
+            }
         }
-
-        // if (result == -1 && hitDirection != null) {
-        // Se non riusciamo a colpire nella nostra direzione attuale, cerchiamo in una nuova direzione
-        // Cambiamo la direzione di 90 gradi
-        //     hitDirection = (hitDirection + 1) % 4;
-        // }
-
 
         // se non abbiamo una direzione o non abbiamo colpito una nave, generiamo una hit casuale
         while (result == -1) {
@@ -132,7 +136,6 @@ public class HardHitShipStrategy implements HitShipStrategy {
      *
      * @param hitPosition
      * @return int hitPosition
-     *
      */
     private int addHitPosition(int hitPosition) {
         if (!(hitPositionsList.contains(hitPosition))) {
@@ -179,7 +182,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
                     return ++rowDigit + columDigit * 10;
                 case "right":
                     if (columDigit == 9) return rowDigit + --columDigit * 10;
-                    return rowDigit + ++columDigit * 10;
+                    return rowDigit + --columDigit * 10;
                 case "left":
                     if (columDigit == 1) return rowDigit;
                     return rowDigit + ++columDigit * 10;
@@ -195,7 +198,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
         // Sort the array and find the min and max
         Arrays.sort(sequence);
         int min = sequence[0];
-        int max = sequence[sequence.length-1];
+        int max = sequence[sequence.length - 1];
 
         // Create a list to hold potential numbers to choose from
         List<Integer> options = new ArrayList<>();
@@ -250,7 +253,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
 
     private int[] sequenceDigits(int hitDirection, int lastHit) {
         //initialize with -1 to denote "no match"
-        int[] result = {-1,-1}; // array to hold the result,
+        int[] result = {-1, -1}; // array to hold the result,
 
         int firstDigitDirection = Math.abs(hitDirection / 10);
         int secondDigitDirection = Math.abs(hitDirection % 10);
