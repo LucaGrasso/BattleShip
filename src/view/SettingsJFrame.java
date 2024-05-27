@@ -42,7 +42,8 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	public void launch() {
-		this.DefaultValuesToProperties();
+		//this.DefaultValuesToProperties();
+
 
 		// Posiziona il frame al centro dello schermo
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,6 +69,8 @@ public class SettingsJFrame extends JFrame {
 		this.addActionListenerToPlaceComboBox();
 		this.addActionListenerToVisibilityComboBox();
 		this.addActionListenerTopConfirmButton();
+
+		this.readSettingsFromFileOrDefaults();
 
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -122,7 +125,18 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	private void addActionListenerTopConfirmButton() {
-		this.confirmButton.addActionListener(_ -> this.dispose());
+		this.confirmButton.addActionListener(_ -> {
+			HitStrategy selectedHitStrategy = (HitStrategy) hitComboBox.getSelectedItem();
+			if (selectedHitStrategy != null) {
+				writeHitToProperties(selectedHitStrategy.getFullClassName());
+			}
+
+			PlaceStrategy selectedPlaceStrategy = (PlaceStrategy) placeComboBox.getSelectedItem();
+			if (selectedPlaceStrategy != null) {
+				writePlaceToProperties(selectedPlaceStrategy.getFullClassName());
+			}
+			this.dispose();
+		});
 	}
 
 	private void completeShipsVisibleLabel() {
@@ -222,4 +236,45 @@ public class SettingsJFrame extends JFrame {
 		}
 	}
 
+	public void readSettingsFromFileOrDefaults() {
+		Properties props = new Properties();
+		FileInputStream in = null;
+
+		try {
+			in = new FileInputStream("src/StrategyProperties.properties");
+			props.load(in);
+			String hitStrategyClass = props.getProperty("hitShipStrategy");
+			String placeStrategyClass = props.getProperty("placeShipStrategy");
+			setHitAndPlaceStrategiesBasedOnProperties(hitStrategyClass, placeStrategyClass);
+		} catch (FileNotFoundException e) {
+			System.out.println("Properties file not found! Default settings would be used.");
+			DefaultValuesToProperties();
+		} catch (IOException e) {
+			System.out.println("Error reading properties file! Default settings would be used.");
+			DefaultValuesToProperties();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+	}
+	private void setHitAndPlaceStrategiesBasedOnProperties(String hitStrategyClass, String placeStrategyClass) {
+		for (HitStrategy hitStrategy : HitStrategy.values()) {
+			if (hitStrategy.getFullClassName().equals(hitStrategyClass)) {
+				this.hitComboBox.setSelectedItem(hitStrategy);
+				break;
+			}
+		}
+
+		for (PlaceStrategy placeStrategy : PlaceStrategy.values()) {
+			if (placeStrategy.getFullClassName().equals(placeStrategyClass)) {
+				this.placeComboBox.setSelectedItem(placeStrategy);
+				break;
+			}
+		}
+	}
 }
