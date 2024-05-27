@@ -12,7 +12,9 @@ package model.strategy;
 public enum HitStrategy {
 	RANDOM("model.strategy.RandomHitShipStrategy"),
 	ORDERED("model.strategy.OrderedHitShipStrategy"),
-	HARD("model.strategy.HardHitShipStrategy");
+	HARD("model.strategy.HardHitShipStrategy"),
+	INTELLIGENT("model.strategy.IntelligentHitShipStrategy"); // Added
+
 
 	private final String fullClassName;
 

@@ -26,15 +26,15 @@ public class PlaceShipFactory {
     private final Properties properties;
 
     public PlaceShipFactory() {
-        this.properties = readPropertiesFile("src/strategyProperties.properties");
+        this.properties = readPropertiesFile();
     }
 
-    private Properties readPropertiesFile(String filePath) {
+    private Properties readPropertiesFile() {
         Properties properties = new Properties();
-        try (InputStream input = new FileInputStream(filePath)) {
+        try (InputStream input = new FileInputStream("src/strategyProperties.properties")) {
             properties.load(input);
         } catch (IOException e) {
-            throw new DomainException("Cannot read properties file: " + filePath, e);
+            throw new DomainException("Cannot read properties file: " + "src/strategyProperties.properties", e);
         }
         return properties;
     }
