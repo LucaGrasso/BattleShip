@@ -2,7 +2,7 @@
  * @Author Luca Grasso
  * @Matricola 294612
  * @Progetto PMO
- * @Data 04/05/2024
+ * @Data 27/05/2024
  */
 
 package model.strategy;
@@ -10,7 +10,7 @@ package model.strategy;
 import java.util.*;
 
 
-public class HardHitShipStrategy implements HitShipStrategy {
+public class IntelligentHitShipStrategy implements HitShipStrategy {
     private final List<Integer> hitPositionsList = new ArrayList<>();
     private Integer lastHit = null;
     private Integer hitDirection;
@@ -21,6 +21,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
     private int rowDirection = -1;
     private int columnDirection = -1;
     private List<Integer> sequenceDigits = new ArrayList<>();
+    private final List<Integer> hitShip = new ArrayList<>();
 
     @Override
     public void setLastHitSuccessful(boolean isLastHitSuccessful) {
@@ -49,6 +50,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
 
         // Se la nave è affondata, resettiamo la strategia
         if (isShipSunk) {
+            addPointNearShipSunk();
             getReset();
         }
 
@@ -68,6 +70,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
                 }
             } else {
                 if (shipOrientation.equals("horizontal")) {
+                    hitShip.add(lastHit);
                     int[] tempSeq = convertListToArray(sequenceDigits);
                     int hitTemp = 0;
                     while (result == -1) {
@@ -77,6 +80,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
                     sequenceDigits.add(hitTemp);
 
                 } else if (shipOrientation.equals("vertical")) {
+                    hitShip.add(lastHit);
                     int[] tempSeq = convertListToArray(sequenceDigits);
                     int hitTemp = 0;
                     while (result == -1) {
@@ -120,6 +124,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
             if (!firstHitShip) firstHitShip = true;
             // verificare se possiamo colpire in quella direzione
             this.hitDirection = lastHit;
+            this.hitShip.add(hitDirection);
             while (result == -1) {
                 // Generiamo un numero casuale (0-99
                 int temp = getAroundLastHit(lastHit);
@@ -277,6 +282,7 @@ public class HardHitShipStrategy implements HitShipStrategy {
 
     private int tryHitShip(int hitDirection, int lastHit) {
         int result = -1;
+        hitShip.add(lastHit);
         int[] sequenceDigitsResult = sequenceDigits(hitDirection, lastHit);
         sequenceDigits.add(sequenceDigitsResult[0]);
         sequenceDigits.add(sequenceDigitsResult[1]);
@@ -297,4 +303,38 @@ public class HardHitShipStrategy implements HitShipStrategy {
         }
         return numArray;
     }
+
+    private void addPointNearShipSunk() {
+
+        for (int hitPosition : hitShip) {
+            int rowDigit = Math.abs(hitPosition % 10);
+            int columnDigit = Math.abs(hitPosition / 10);
+
+            List<Integer> adjacentPoints = new ArrayList<>();
+            int up = (rowDigit == 0) ? -1 : hitPosition - 1;
+            int upRight = (rowDigit == 0 || columnDigit == 9) ? -1 : hitPosition - 1 + 10;
+            int upLeft = (rowDigit == 0 || columnDigit == 0) ? -1 : hitPosition - 1 - 10;
+            int down = (rowDigit == 9) ? -1 : hitPosition + 1;
+            int downRight = (rowDigit == 9 || columnDigit == 9) ? -1 : hitPosition + 1 + 10;
+            int downLeft = (rowDigit == 9 || columnDigit == 0) ? -1 : hitPosition + 1 - 10;
+            int right = (columnDigit == 9) ? -1 : hitPosition + 10;
+            int left = (columnDigit == 0) ? -1 : hitPosition - 10;
+            adjacentPoints.add(up);
+            adjacentPoints.add(upRight);
+            adjacentPoints.add(upLeft);
+            adjacentPoints.add(down);
+            adjacentPoints.add(downRight);
+            adjacentPoints.add(downLeft);
+            adjacentPoints.add(right);
+            adjacentPoints.add(left);
+
+            for (int hole : adjacentPoints) {
+                if (!(hitPositionsList.contains(hole) && hole != -1)) {
+                    hitPositionsList.add(hole);
+                }
+            }
+        }
+        hitShip.clear();
+    }
 }
+
