@@ -7,6 +7,8 @@
 
 package model.strategy;
 
+import model.DomainException;
+
 import java.util.*;
 
 
@@ -50,6 +52,7 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
 
         // Se la nave è affondata, resettiamo la strategia
         if (isShipSunk) {
+            hitShip.add(lastHit);
             addPointNearShipSunk();
             getReset();
         }
@@ -329,7 +332,8 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
             adjacentPoints.add(left);
 
             for (int hole : adjacentPoints) {
-                if (!(hitPositionsList.contains(hole) && hole != -1)) {
+                if (hole == -1) continue;
+                if (!(hitPositionsList.contains(hole))) {
                     hitPositionsList.add(hole);
                 }
             }
