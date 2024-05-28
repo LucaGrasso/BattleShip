@@ -103,6 +103,7 @@ public class HumanPlayer {
 		}
 		shipToAddHitTo.addNumberHit(number);
 		this.notifyScoreListeners();
+		this.notifyScoreListeners();
 	}
 
 	public ArrayList<Ship> getShips() {
@@ -137,6 +138,15 @@ public class HumanPlayer {
 	public void addShip(ShipType shipType, Direction shipDirection, int shipPosition) {
 		Ship ship = new Ship(shipType, shipDirection, shipPosition);
 		this.addShip(ship);
+	}
+
+	public void removeShip(ShipType shipType, Direction shipDirection, int shipPosition) {
+		List<Ship> tempList = new ArrayList<>(ships);
+		tempList.forEach(ship -> {
+			if (ship.getShipType().equals(shipType) && ship.getShipDirection().equals(shipDirection) && ship.getShipPosition() == shipPosition) {
+				ships.remove(ship);
+			}
+		});
 	}
 
 	public Ship getlastAddedShip() {

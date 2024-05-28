@@ -40,6 +40,10 @@ public class BattleShipGameModel {
 		this.getHumanPlayer().addShip(shipType, shipDirection, shipPositionX);
 	}
 
+	public void removeShipFromHumanPlayer(ShipType shipType, Direction shipDirection, int shipPositionX) {
+		this.getHumanPlayer().removeShip(shipType, shipDirection, shipPositionX);
+	}
+
 	public HumanPlayer getHumanPlayer() {
 		return this.game.getHumanPlayer();
 	}

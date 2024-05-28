@@ -152,11 +152,23 @@ public class GameController {
 
 				int x = event.getX();
 				int y = event.getY();
-				int beginNumber = -1;
+				int beginNumber;
 				for (int i = 0; i < view.getGameBoard1Size(); i++) {
 					if (view.isClickedInGameBoard1(i, x, y)) {
 						beginNumber = i;
 						try {
+							Color color = view.getGameFrame().getGameBoardJPanel1().getColor(beginNumber);
+
+							// TODO: refactor this code to use a switch statement
+							// devo cercare per punto preso e se lo trovo devo rimuovere la nave
+							if (color.equals(Color.WHITE)) {
+								model.removeShipFromHumanPlayer(BeginNumber);
+								for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
+									view.colorRemoveShipGameBoardPanel1(shipNumber, Color.BLACK, Color.LIGHT_GRAY);
+								}
+								break;
+							}
+
 							model.addShipToHumanPlayer(view.getSelectedShipType(), view.getSelectedDirection(),
 									beginNumber);
 							for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {

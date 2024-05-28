@@ -41,6 +41,10 @@ public class Square {
 		this.color = color;
 	}
 
+	public Color getColor(Color color) {
+		return this.color;
+	}
+
 	public boolean getBusy() {
 		return busy;
 	}

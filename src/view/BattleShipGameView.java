@@ -80,11 +80,15 @@ public class BattleShipGameView {
 		this.getGameBoardPanel1().setColor(number, color);
 	}
 
+	public void colorRemoveShipGameBoardPanel1(int number, Color borderColor, Color color) {
+		this.getGameBoardPanel1().setColor(number, borderColor, color);
+	}
+
+
 	public void colorShipGameBoardPanel2(int number, Color color) {
 		this.getGameBoardPanel2().setColor(number, color);
 	}
 
-	/*** capire come mai non è usata ***/
 	public boolean getSquareBusyGameBoardPanel1(int number) {
 		return this.getGameBoardPanel1().getSquares().get(number).getBusy();
 	}
@@ -160,5 +164,7 @@ public class BattleShipGameView {
 	public SettingsJFrame getSettingsJFrame() {
 		return this.SettingsJFrame;
 	}
+
+
 
 }

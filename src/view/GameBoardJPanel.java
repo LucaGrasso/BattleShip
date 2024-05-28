@@ -41,6 +41,16 @@ public class GameBoardJPanel extends JPanel {
 		gameSquares.get(nr).setColor(squareBorderColor);
 		this.repaint();
 	}
+	public void setColor(int nr, Color squareBorderColor, Color squareColor) {
+		gameSquares.get(nr).setBorderColor(squareBorderColor);
+		gameSquares.get(nr).setColor(squareColor);
+		this.repaint();
+	}
+
+
+	public Color getColor(int nr) {
+		return gameSquares.get(nr).getColor();
+	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
