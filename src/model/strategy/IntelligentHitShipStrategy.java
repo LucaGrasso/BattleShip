@@ -7,7 +7,6 @@
 
 package model.strategy;
 
-import model.DomainException;
 
 import java.util.*;
 
@@ -149,6 +148,7 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
      *
      * @param hitPosition
      * @return int hitPosition
+     *
      */
     private int addHitPosition(int hitPosition) {
         if (!(hitPositionsList.contains(hitPosition))) {
