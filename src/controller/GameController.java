@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import model.BattleShipGameModel;
-import model.DomainException;
+
+import model.*;
 import view.BattleShipGameView;
 /**
  * @author Luca Grasso
@@ -159,14 +159,21 @@ public class GameController {
 						try {
 							Color color = view.getGameFrame().getGameBoardJPanel1().getColor(beginNumber);
 
-							// TODO: refactor this code to use a switch statement
-							// devo cercare per punto preso e se lo trovo devo rimuovere la nave
 							if (color.equals(Color.WHITE)) {
-								model.removeShipFromHumanPlayer(BeginNumber);
-								for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
-									view.colorRemoveShipGameBoardPanel1(shipNumber, Color.BLACK, Color.LIGHT_GRAY);
+
+								Ship ship = model.getShipFromHumanPlayerByNumber(beginNumber);
+								if(ship != null){
+									Direction direction = ship.getShipDirection();
+									ShipType type = ship.getShipType();
+									Integer firstNumber = ship.getShipNumbers().getFirst();
+
+									for (Integer shipNumber : model.getShipArrayFromGivenNumber(beginNumber)) {
+										view.colorRemoveShipGameBoardPanel1(shipNumber, Color.BLACK, Color.LIGHT_GRAY);
+									}
+
+									model.removeShipFromHumanPlayer(type, direction, firstNumber);
+									break;
 								}
-								break;
 							}
 
 							model.addShipToHumanPlayer(view.getSelectedShipType(), view.getSelectedDirection(),

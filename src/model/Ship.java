@@ -24,6 +24,10 @@ public class Ship {
 		return shipNumbers.getFirst();
 	}
 
+	public boolean isNumberInShip(int number) {
+		return shipNumbers.contains(number);
+	}
+
 	private void setAllShipNumber(int startPosition) {
 		if (this.getShipDirection().equals(Direction.HORIZONTAAL)) {
 			int endPosition = startPosition + (10 * (shipType.getNumberBoxes() - 1));
