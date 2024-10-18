@@ -21,54 +21,52 @@ import model.ShipType;
 public class ShipBoardJPanel extends JPanel {
 
     private final JComboBox<Object> possibleShipsBox;
-
-    public ShipType selectedShipType = ShipType.AIRCRAFT_CARRIER;
-	public Direction shipDirection = Direction.VERTICAL;
+    private ShipType selectedShipType = ShipType.AIRCRAFT_CARRIER;
+	private Direction shipDirection = Direction.VERTICAL;
 
 	public ShipBoardJPanel() {
-        JLabel shipsLabel = new JLabel("Available ships:");
+		JLabel shipsLabel = new JLabel("Available ships:");
 		List<ShipType> listShipTypes = ShipType.getAllShipTypes();
-		this.possibleShipsBox = new JComboBox<>(listShipTypes.toArray());
-        JLabel directionLabel = new JLabel("Direction:");
-        JRadioButton verticalRadioButton = new JRadioButton("Vertical", true);
-        JRadioButton horizontalRadioButton = new JRadioButton("Horizontal");
+		this.possibleShipsBox = new JComboBox<>(listShipTypes.toArray(new ShipType[0]));
 
-        ButtonGroup group = new ButtonGroup();
+		JLabel directionLabel = new JLabel("Direction:");
+		JRadioButton verticalRadioButton = new JRadioButton("Vertical", true);
+		JRadioButton horizontalRadioButton = new JRadioButton("Horizontal");
+
+		// Gruppo di bottoni per il radio button
+		ButtonGroup group = new ButtonGroup();
 		group.add(horizontalRadioButton);
 		group.add(verticalRadioButton);
 
+		// Aggiungi azioni ai componenti
 		possibleShipsBox.addActionListener(e -> selectedShipType = (ShipType) possibleShipsBox.getSelectedItem());
-
 		verticalRadioButton.addActionListener(e -> shipDirection = Direction.VERTICAL);
+		horizontalRadioButton.addActionListener(e -> shipDirection = Direction.HORIZONTAL);
 
-		horizontalRadioButton.addActionListener(e -> shipDirection = Direction.HORIZONTAAL);
-
-		this.setLayout(new GridBagLayout());
-
+		// Impostazione layout
+		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
 
+		// Aggiunta dei componenti al pannello
 		c.gridx = 0;
 		c.gridy = 0;
-		this.add(shipsLabel, c);
+		add(shipsLabel, c);
 
-		c.gridx = 0;
 		c.gridy = 1;
+		add(possibleShipsBox, c);
 
-		this.add(possibleShipsBox, c);
-
-		c.gridx = 0;
 		c.gridy = 2;
-		this.add(directionLabel, c);
+		add(directionLabel, c);
 
 		c.gridy = 3;
-		this.add(horizontalRadioButton, c);
+		add(horizontalRadioButton, c);
+
 		c.gridx = 1;
-		c.gridy = 3;
-		this.add(verticalRadioButton, c);
-
+		add(verticalRadioButton, c);
 	}
+
 
 	/**
 	 * Returns the selected ship type

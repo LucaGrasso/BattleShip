@@ -29,7 +29,7 @@ public class Ship {
 	}
 
 	private void setAllShipNumber(int startPosition) {
-		if (this.getShipDirection().equals(Direction.HORIZONTAAL)) {
+		if (this.getShipDirection().equals(Direction.HORIZONTAL)) {
 			int endPosition = startPosition + (10 * (shipType.getNumberBoxes() - 1));
 			if (endPosition < 100) {
 				for (int i = startPosition; i <= endPosition; i += 10) {
@@ -51,12 +51,12 @@ public class Ship {
 	}
 
 	public ArrayList<Integer> getNumbersRandomShip() {
-		ArrayList<Integer> numbersRandom = new ArrayList<Integer>();
+		ArrayList<Integer> numbersRandom = new ArrayList<>();
 
 		int firstNumber = this.getShipNumbers().getFirst();
 		int lastNumber = this.getShipNumbers().getLast();
 
-		if (this.getShipDirection().equals(Direction.HORIZONTAAL)) {
+		if (this.getShipDirection().equals(Direction.HORIZONTAL)) {
 			for (Integer integer : this.getShipNumbers()) {
 				if (integer == firstNumber) {
 					if ((integer % 10) != 0) {
