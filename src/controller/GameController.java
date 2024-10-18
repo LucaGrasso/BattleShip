@@ -149,7 +149,6 @@ public class GameController {
 	private class MouseClickHandler extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			if (view.isGameBoardJPanel1Enabled()) {
-
 				int x = event.getX();
 				int y = event.getY();
 				int beginNumber;
@@ -158,28 +157,28 @@ public class GameController {
 						beginNumber = i;
 						try {
 							Color color = view.getGameFrame().getGameBoardJPanel1().getColor(beginNumber);
+							// Clic destro del mouse per rimuovere la nave
+							if (event.getButton() == MouseEvent.BUTTON3) {
+								if (color.equals(Color.WHITE)) {
+									Ship ship = model.getShipFromHumanPlayerByNumber(beginNumber);
+									if (ship != null) {
+										Direction direction = ship.getShipDirection();
+										ShipType type = ship.getShipType();
+										Integer firstNumber = ship.getShipNumbers().getFirst();
 
-							if (color.equals(Color.WHITE)) {
+										for (Integer shipNumber : model.getShipArrayFromGivenNumber(beginNumber)) {
+											view.colorRemoveShipGameBoardPanel1(shipNumber, Color.BLACK, Color.LIGHT_GRAY);
+										}
 
-								Ship ship = model.getShipFromHumanPlayerByNumber(beginNumber);
-								if(ship != null){
-									Direction direction = ship.getShipDirection();
-									ShipType type = ship.getShipType();
-									Integer firstNumber = ship.getShipNumbers().getFirst();
-
-									for (Integer shipNumber : model.getShipArrayFromGivenNumber(beginNumber)) {
-										view.colorRemoveShipGameBoardPanel1(shipNumber, Color.BLACK, Color.LIGHT_GRAY);
+										model.removeShipFromHumanPlayer(type, direction, firstNumber);
+										break;
 									}
-
-									model.removeShipFromHumanPlayer(type, direction, firstNumber);
-									break;
 								}
-							}
-
-							model.addShipToHumanPlayer(view.getSelectedShipType(), view.getSelectedDirection(),
-									beginNumber);
-							for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
-								view.colorShipGameBoardPanel1(shipNumber, Color.WHITE);
+							} else { // Altrimenti aggiungere la nave con il clic sinistro
+								model.addShipToHumanPlayer(view.getSelectedShipType(), view.getSelectedDirection(), beginNumber);
+								for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
+									view.colorShipGameBoardPanel1(shipNumber, Color.WHITE);
+								}
 							}
 						} catch (DomainException e) {
 							view.showError(e.getMessage());

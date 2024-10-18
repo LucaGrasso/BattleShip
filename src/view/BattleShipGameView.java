@@ -84,7 +84,6 @@ public class BattleShipGameView {
 		this.getGameBoardPanel1().setColor(number, borderColor, color);
 	}
 
-
 	public void colorShipGameBoardPanel2(int number, Color color) {
 		this.getGameBoardPanel2().setColor(number, color);
 	}
@@ -164,7 +163,5 @@ public class BattleShipGameView {
 	public SettingsJFrame getSettingsJFrame() {
 		return this.SettingsJFrame;
 	}
-
-
-
+	
 }

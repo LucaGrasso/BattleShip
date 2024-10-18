@@ -4,7 +4,6 @@ import model.observer.ScoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * @author Luca Grasso
@@ -17,32 +16,39 @@ public class HumanPlayer {
 
     private final List<ScoreListener> scoreListeners = new ArrayList<>();
 
+    // Aggiungo un Listener per la gestione del punteggio
     public void addScoreListener(ScoreListener listener) {
         scoreListeners.add(listener);
     }
 
+    // Rimuovo un Listener per la gestione del punteggio
     public void removeScoreListener(ScoreListener listener) {
         scoreListeners.remove(listener);
     }
 
+    // Notifico tutti i listener del punteggio che è stato aggiornato il punteggio
     private void notifyScoreListeners() {
         for (ScoreListener listener : scoreListeners) {
             listener.onScoreUpdate();
         }
     }
 
+    // Costruttore di default per HumanPlayer con nome di default
     public HumanPlayer() {
         this("defaultName");
     }
 
+    // Costruttore per HumanPlayer con nome specificato dall'utente
     public HumanPlayer(String name) {
         this.setName(name);
     }
 
+    // Restituisce il nome del giocatore umano corrente
     public String getName() {
         return name;
     }
 
+    // Imposto il nome del giocatore umano corrente con il nome specificato
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
             this.name = "Player1";
@@ -51,9 +57,10 @@ public class HumanPlayer {
         }
     }
 
-    public Ship getShipContainsNumber(int shipNumber) {
+    // Restituisce la nave contenente il numero specificato della sua dimensione
+    public Ship getShipBySizeNumber(int shipSize) {
         for (Ship ship : this.getShips()) {
-            if (ship.getShipNumbers().contains(shipNumber)) {
+            if (ship.getShipNumbers().contains(shipSize)) {
                 return ship;
             }
         }
@@ -62,7 +69,7 @@ public class HumanPlayer {
 
     public boolean addHitToShip(int number) {
         // returns if ship was destroyed
-        Ship ship = this.getShipContainsNumber(number);
+        Ship ship = this.getShipBySizeNumber(number);
         if (ship == null) {
             throw new DomainException("Ship was not found!");
         }
@@ -187,6 +194,8 @@ public class HumanPlayer {
         return ship.getShipType().getNumberOfAllowedShips() > shipCount;
     }
 
+    // Verifica se la nave si sovrappone a un'altra nave già posizionata sul campo di gioco
+    // Restituisce true se la nave non si sovrappone a nessun'altra nave, altrimenti false
     private boolean checkShipOverlap(Ship ship) {
         for (Ship s : this.getShips()) {
             for (Integer i : ship.getShipNumbers()) {
