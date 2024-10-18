@@ -19,6 +19,8 @@ public enum ShipType {
 	private final int length;
 	private final int numberOfAllowedShips;
 
+
+
 	ShipType(int length, int numberOfAllowedShips) {
 		this.length = length;
 		this.numberOfAllowedShips = numberOfAllowedShips;
