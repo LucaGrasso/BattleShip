@@ -116,7 +116,9 @@ public class ShipBoardJPanel extends JPanel {
 	 */
 	public void setShipSingleCountLabel(ShipType type, int count) {
 		usedShipsMap.put(type, count);
-		updateShipTypeCountLabel(type);
+		if (type.equals(getSelectedShipType())) {
+			updateShipTypeCountLabel(type);
+		}
 	}
 
 	/**

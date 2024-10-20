@@ -173,7 +173,7 @@ public class GameController {
 										model.removeShipFromHumanPlayer(type, direction, firstNumber);
 										// Aggiorno l'etichetta
 										view.getGameFrame().setShipTotalCountLabel(model.getHumanPlayerShipCount());
-										view.getGameFrame().setShipSingleCountLabel(view.getSelectedShipType(), (int) model.getShipTypeCount(view.getSelectedShipType()));
+										view.getGameFrame().setShipSingleCountLabel(type, (int) model.getShipTypeCount(type));
 
 										break;
 									}
@@ -197,6 +197,7 @@ public class GameController {
 			}
 		}
 	}
+
 
 	private void computerGenerateShips() {
 		model.computerGenerateShips();
