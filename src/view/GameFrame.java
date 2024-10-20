@@ -1,5 +1,7 @@
 package view;
 
+import model.ShipType;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
@@ -22,8 +24,8 @@ public class GameFrame extends JFrame {
 	private final JPanel namePanel1 = new JPanel();
 	private final JPanel namePanel2 = new JPanel();
 	private ShipBoardJPanel shipBordJPanel;
-	private JButton startButton;
 
+	private JButton startButton;
 	private JButton settingsButton;
 
 	private JLabel name1Label;
@@ -104,7 +106,6 @@ public class GameFrame extends JFrame {
 		this.add(panel1);
 	}
 
-
 	private void completeSettingsGameBoardPanel2() {
 		panel2 = new GameBoardJPanel((PANEL_SIZE / NUM_COLUMNS), NUM_COLUMNS);
 		panel2.setBackground(Color.GRAY);
@@ -114,21 +115,17 @@ public class GameFrame extends JFrame {
 		this.add(panel2);
 	}
 
-
 	public GameBoardJPanel getGameBoardJPanel1() {
 		return panel1;
 	}
-
 
 	public GameBoardJPanel getGameBoardJPanel2() {
 		return panel2;
 	}
 
-
 	public ShipBoardJPanel getShipBoardPanel() {
 		return shipBordJPanel;
 	}
-
 
 	public void completeSettingsNamePanel1(String name) {
 		if (name == null || name.isEmpty()) {
@@ -185,6 +182,14 @@ public class GameFrame extends JFrame {
 	public void closeApplication() {
 		setVisible(false);
 		dispose();
+	}
+
+	public void setShipTotalCountLabel(int count) {
+		this.shipBordJPanel.setShipTotalCountLabel(count);
+	}
+
+	public void setShipSingleCountLabel(ShipType type, int count) {
+		this.shipBordJPanel.setShipSingleCountLabel(type, count);
 	}
 
 }

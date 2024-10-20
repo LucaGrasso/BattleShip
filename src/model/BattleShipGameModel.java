@@ -28,7 +28,7 @@ public class BattleShipGameModel {
 		return this.getComputerPlayer().getName();
 	}
 
-	public ArrayList<Ship> getHumanPlayerShip() {
+	public List<Ship> getHumanPlayerShip() {
 		return this.getHumanPlayer().getShips();
 	}
 
@@ -44,7 +44,7 @@ public class BattleShipGameModel {
 		this.getHumanPlayer().removeShip(shipType, shipDirection, clickPosition);
 	}
 
-	public ArrayList<Integer> getShipArrayFromGivenNumber(int number) {
+	public List<Integer> getShipArrayFromGivenNumber(int number) {
 		return this.getHumanPlayer().getShipArrayFromGivenNumber(number);
 	}
 
@@ -96,12 +96,12 @@ public class BattleShipGameModel {
 		this.getGame().newGame();
 	}
 
-	public ArrayList<Integer> allNumbersOfDestroyedShipsOfComputer() {
-		return this.getComputerPlayer().allNumbersOfDestroyedShips();
+	public List<Integer> allNumbersOfDestroyedShipsOfComputer() {
+		return this.getComputerPlayer().getAllNumbersOfDestroyedShips();
 	}
 
-	public ArrayList<Integer> allNumbersOfDestroyedShipsOfHumanPlayer() {
-		return this.getHumanPlayer().allNumbersOfDestroyedShips();
+	public List<Integer> allNumbersOfDestroyedShipsOfHumanPlayer() {
+		return this.getHumanPlayer().getAllNumbersOfDestroyedShips();
 	}
 
 	public int getComputerShot() {
@@ -138,6 +138,14 @@ public class BattleShipGameModel {
 
 	public void readPlacesShipStrategyFromProp() {
 		this.getComputerPlayer().readPlaceShipFromProp();
+	}
+
+	public int getHumanPlayerShipCount() {
+		return this.getHumanPlayer().getHumanPlayerShipCount();
+	}
+
+	public long getShipTypeCount(ShipType type) {
+		return this.getHumanPlayer().getShipTypeCount(type);
 	}
 
 }

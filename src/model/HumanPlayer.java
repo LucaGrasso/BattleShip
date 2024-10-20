@@ -11,21 +11,19 @@ import java.util.List;
  */
 public class HumanPlayer {
     private String name;
-    private final ArrayList<Ship> ships = new ArrayList<>();
-    public static final int MAX_SHIPS = 5;
+    private final List<Ship> ships = new ArrayList<>();
+    // Numero massimo di navi che un giocatore può posizionare sul campo di gioco
+    protected static final int MAX_SHIPS = 5;
 
     private final List<ScoreListener> scoreListeners = new ArrayList<>();
-
     // Aggiungo un Listener per la gestione del punteggio
     public void addScoreListener(ScoreListener listener) {
         scoreListeners.add(listener);
     }
-
     // Rimuovo un Listener per la gestione del punteggio
     public void removeScoreListener(ScoreListener listener) {
         scoreListeners.remove(listener);
     }
-
     // Notifico tutti i listener del punteggio che è stato aggiornato il punteggio
     private void notifyScoreListeners() {
         for (ScoreListener listener : scoreListeners) {
@@ -33,14 +31,14 @@ public class HumanPlayer {
         }
     }
 
-    // Costruttore di default per HumanPlayer con nome di default
-    public HumanPlayer() {
-        this("defaultName");
+    // Costruttore di default
+    public HumanPlayer(){
+        this.name = "Player1";
     }
 
-    // Costruttore per HumanPlayer con nome specificato dall'utente
-    public HumanPlayer(String name) {
-        this.setName(name);
+    // Costruttore con parametro
+    public HumanPlayer(String name){
+        this.name = name;
     }
 
     // Restituisce il nome del giocatore umano corrente
@@ -95,9 +93,9 @@ public class HumanPlayer {
         return this.getAllDestroyedShips().containsAll(this.getShips());
     }
 
-    public ArrayList<Integer> allNumbersOfDestroyedShips() {
-        ArrayList<Integer> destroyedNumbers = new ArrayList<>();
-        for (Ship s : this.getAllDestroyedShips()) {
+    public List<Integer> getAllNumbersOfDestroyedShips() {
+        List<Integer> destroyedNumbers = new ArrayList<>();
+        for (Ship s : getAllDestroyedShips()) {
             destroyedNumbers.addAll(s.getShipNumbers());
         }
         return destroyedNumbers;
@@ -112,7 +110,7 @@ public class HumanPlayer {
         this.notifyScoreListeners();
     }
 
-    public ArrayList<Ship> getShips() {
+    public List<Ship> getShips() {
         return ships;
     }
 
@@ -129,13 +127,13 @@ public class HumanPlayer {
     }
 
     public void addShip(Ship ship) {
-        if (maxNumberShips()) {
+        if (ships.size() == MAX_SHIPS) {
             throw new DomainException("You cannot place more than 5 ships!");
         }
-        if (!this.maxNumberShipsType(ship)) {
+        if (!isShipTypeAllowed(ship)) {
             throw new DomainException("It is no longer possible to place ships of this type!");
         }
-        if (!this.checkShipOverlap(ship)) {
+        if (isShipOverlapping(ship)) {
             throw new DomainException("This ship is placed too close to another ship!");
         }
         this.ships.add(ship);
@@ -164,8 +162,12 @@ public class HumanPlayer {
         return null;
     }
 
+    public int getHumanPlayerShipCount() {
+        return ships.size();
+    }
 
-    public ArrayList<Integer> getShipArrayFromGivenNumber(int number) {
+
+    public List<Integer> getShipArrayFromGivenNumber(int number) {
         for (Ship ship : ships) {
             if (ship.isNumberInShip(number)) {
                 return ship.getShipNumbers();
@@ -179,32 +181,36 @@ public class HumanPlayer {
         return ships.getLast();
     }
 
-    private boolean maxNumberShips() {
-        return ships.size() == MAX_SHIPS;
+    private boolean isShipTypeAllowed(Ship ship) {
+        long shipCount = ships.stream()
+                .filter(s -> s.getShipType().equals(ship.getShipType()))
+                .count();
+        return ship.getShipType().getNumberOfAllowedShips() > shipCount;
     }
 
-    private boolean maxNumberShipsType(Ship ship) {
-        int shipCount = 0;
-        for (Ship s : this.getShips()) {
-            if (s.getShipType().equals(ship.getShipType())) {
-                shipCount++;
-            }
-        }
-        // true if ship is allowed to add
-        return ship.getShipType().getNumberOfAllowedShips() > shipCount;
+    /**
+     * Conta il numero di navi di un certo tipo che il giocatore ha già posizionato
+     *
+     * @param shipType Il tipo di nave di cui si desidera effettuare il conteggio
+     * @return Il numero di navi del tipo specificato che sono state posizionate
+     */
+    public long getShipTypeCount(ShipType shipType) {
+        return ships.stream()
+                .filter(s -> s.getShipType().equals(shipType))
+                .count();
     }
 
     // Verifica se la nave si sovrappone a un'altra nave già posizionata sul campo di gioco
     // Restituisce true se la nave non si sovrappone a nessun'altra nave, altrimenti false
-    private boolean checkShipOverlap(Ship ship) {
-        for (Ship s : this.getShips()) {
-            for (Integer i : ship.getShipNumbers()) {
-                if (s.getNumbersRandomShip().contains(i) || s.getShipNumbers().contains(i)) {
-                    return false;
+    private boolean isShipOverlapping(Ship ship) {
+        for (Ship s : ships) {
+            for (Integer number : ship.getShipNumbers()) {
+                if (s.getNumbersRandomShip().contains(number) || s.getShipNumbers().contains(number)) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
 }

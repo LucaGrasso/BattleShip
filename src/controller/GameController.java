@@ -171,6 +171,10 @@ public class GameController {
 										}
 
 										model.removeShipFromHumanPlayer(type, direction, firstNumber);
+										// Aggiorno l'etichetta
+										view.getGameFrame().setShipTotalCountLabel(model.getHumanPlayerShipCount());
+										view.getGameFrame().setShipSingleCountLabel(view.getSelectedShipType(), (int) model.getShipTypeCount(view.getSelectedShipType()));
+
 										break;
 									}
 								}
@@ -179,6 +183,10 @@ public class GameController {
 								for (Integer shipNumber : model.getLastAddedShipToHumanPlayer().getShipNumbers()) {
 									view.colorShipGameBoardPanel1(shipNumber, Color.WHITE);
 								}
+								// Aggiorno l'etichetta
+								view.getGameFrame().setShipTotalCountLabel(model.getHumanPlayerShipCount());
+								view.getGameFrame().setShipSingleCountLabel(view.getSelectedShipType(), (int) model.getShipTypeCount(view.getSelectedShipType()));
+
 							}
 						} catch (DomainException e) {
 							view.showError(e.getMessage());

@@ -16,7 +16,7 @@ public class ComputerPlayer extends HumanPlayer {
 	public HitShipStrategy hitShipStrategy;
 
 	public ComputerPlayer() {
-		super("Computer");
+		super();
 		this.readHitStrategyFromProp();
 		this.readPlaceShipFromProp();
 	}
