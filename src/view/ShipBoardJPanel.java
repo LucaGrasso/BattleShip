@@ -12,15 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-
 import model.Direction;
 import model.ShipType;
-
 
 /**
  * Pannello per la selezione delle navi e della loro direzione.
  *
- * @author Luca Grasso
+ * @author Luca
  * @version 1.2
  */
 public class ShipBoardJPanel extends JPanel {
@@ -29,21 +27,25 @@ public class ShipBoardJPanel extends JPanel {
 	private final JComboBox<ShipType> possibleShipsBox;
 	private final JLabel shipsTypeCountLabel;
 	private final JLabel shipsTotalCountLabel;
+	private final JLabel legendLabel;
 
 	private ShipType selectedShipType = ShipType.AIRCRAFT_CARRIER;
 	private Direction shipDirection = Direction.VERTICAL;
 
 	private static final String SHIP_TYPE_COUNT_LABEL_TEXT = "Available >>  ";
 	private static final String SHIP_TOTAL_COUNT_LABEL_TEXT = "Total Ship >>  ";
+	private static final String LEGEND_LABEL_TEXT =
+			"<html>Right-click to remove a ship<br>Use the left button to place a ship</html>";
 
 	// La mappa per tenere traccia delle navi usate
 	private final Map<ShipType, Integer> usedShipsMap = new HashMap<>();
 
-    public ShipBoardJPanel() {
+	public ShipBoardJPanel() {
 		// Inizializzazione componenti
 		this.possibleShipsBox = new JComboBox<>(ShipType.getAllShipTypes().toArray(new ShipType[0]));
 		this.shipsTypeCountLabel = new JLabel(SHIP_TYPE_COUNT_LABEL_TEXT + 0);
 		this.shipsTotalCountLabel = new JLabel(SHIP_TOTAL_COUNT_LABEL_TEXT + 0);
+		this.legendLabel = new JLabel(LEGEND_LABEL_TEXT);
 		initializeComponents();
 	}
 
@@ -60,8 +62,8 @@ public class ShipBoardJPanel extends JPanel {
 		// Aggiorna la JLabel quando viene selezionata una nuova nave
 		possibleShipsBox.addActionListener(e -> {
 			selectedShipType = (ShipType) possibleShipsBox.getSelectedItem();
-            assert selectedShipType != null;
-            updateShipTypeCountLabel(selectedShipType);
+			assert selectedShipType != null;
+			updateShipTypeCountLabel(selectedShipType);
 		});
 
 		verticalRadioButton.addActionListener(e -> shipDirection = Direction.VERTICAL);
@@ -98,6 +100,13 @@ public class ShipBoardJPanel extends JPanel {
 		c.gridx = 1;
 		add(verticalRadioButton, c);
 
+		// Aggiunta della leggenda
+		c.gridx = 0;
+		c.gridy = 6;
+		c.gridwidth = 2;
+		c.insets = new Insets(10, 0, 0, 0);
+		add(legendLabel, c);
+
 		// Inizializza la JLabel con il valore della nave di default
 		updateShipTypeCountLabel(selectedShipType);
 	}
@@ -125,7 +134,7 @@ public class ShipBoardJPanel extends JPanel {
 	 * Aggiorna la label che mostra il numero di navi disponibili totalmente sul tabellone.
 	 */
 	public void setShipTotalCountLabel(int count) {
-        shipsTotalCountLabel.setText(SHIP_TOTAL_COUNT_LABEL_TEXT + count);
+		shipsTotalCountLabel.setText(SHIP_TOTAL_COUNT_LABEL_TEXT + count);
 	}
 
 	/**
