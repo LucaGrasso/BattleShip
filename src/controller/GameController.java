@@ -126,7 +126,7 @@ public class GameController {
 			updateNameFieldComputer();
 			if (model.getIfGameOverHumanPlayer()) {
 				view.showMessage("Game over!\n" + model.getComputerPlayerName() + " won met "
-						+ model.getComputerPlayerName() + " points...");
+						+ model.getComputerPlayerScore() + " points...");
 				endGame();
 			}
 		}
