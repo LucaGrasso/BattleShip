@@ -31,14 +31,14 @@ public class HumanPlayer {
         }
     }
 
-    // Costruttore di default
-    public HumanPlayer(){
-        this.name = "Player1";
+    // Costruttore di default per HumanPlayer con nome di default
+    public HumanPlayer() {
+        this("defaultName");
     }
 
-    // Costruttore con parametro
-    public HumanPlayer(String name){
-        this.name = name;
+    // Costruttore per HumanPlayer con nome specificato dall'utente
+    public HumanPlayer(String name) {
+        this.setName(name);
     }
 
     // Restituisce il nome del giocatore umano corrente
