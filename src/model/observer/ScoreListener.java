@@ -1,12 +1,17 @@
 package model.observer;
 
 /**
- * Project BattleShip
- * Author  lgras  on  03/05/2024
- * Version 1.0
- * Description This interface is used to notify the score changes.
- * This is a part of the Observer pattern.
+ * Interfaccia utilizzata per notificare i cambiamenti del punteggio.
+ * Fa parte del pattern Observer.
+ *
+ * @author lgras
+ * @version 1.0
+ * @date 03/05/2024
  */
 public interface ScoreListener {
+
+    /**
+     * Metodo chiamato per aggiornare il punteggio.
+     */
     void onScoreUpdate();
 }

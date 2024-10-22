@@ -19,9 +19,9 @@ import model.strategy.HitStrategy;
 import model.strategy.PlaceStrategy;
 
 /**
- * A class to represent the settings frame for the application.
- * It allows the user to select hit and place strategies and
- * set the visibility of ships.
+ * Classe per rappresentare il frame delle impostazioni dell'applicazione.
+ * Permette all'utente di selezionare le strategie di hit e place
+ * e di impostare la visibilità delle navi.
  *
  * @version 1.0
  */
@@ -40,7 +40,7 @@ public class SettingsJFrame extends JFrame {
 	public final static int WIDTH_FRAME = 500;
 
 	/**
-	 * Constructs a SettingsJFrame object and initializes its components.
+	 * Costruisce un oggetto SettingsJFrame e inizializza i suoi componenti.
 	 */
 	public SettingsJFrame() {
 		super();
@@ -48,7 +48,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Initializes the frame's properties and components.
+	 * Inizializza le proprietà e i componenti del frame.
 	 */
 	public void launch() {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -58,7 +58,7 @@ public class SettingsJFrame extends JFrame {
 		this.setLayout(null);
 		this.setTitle("Settings/Debugging");
 
-		// Configures and adds components to the frame
+		// Configura e aggiunge i componenti al frame
 		this.completeLabelHitStrategy();
 		this.completeBoxHitStrategy();
 		this.completeConfirmButton();
@@ -69,7 +69,7 @@ public class SettingsJFrame extends JFrame {
 		this.completeShipsVisibleLabel();
 		this.completeShipsVisibleBox();
 
-		// Adds listeners to components
+		// Aggiunge gli ascoltatori ai componenti
 		this.addActionListenerToHitComboBox();
 		this.addActionListenerToPlaceComboBox();
 		this.addActionListenerToVisibilityComboBox();
@@ -77,7 +77,7 @@ public class SettingsJFrame extends JFrame {
 
 		this.readSettingsFromFileOrDefaults();
 
-		// Adds a listener to handle window closing event
+		// Aggiunge un ascoltatore per gestire l'evento di chiusura della finestra
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -87,7 +87,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Configures and adds the confirm button to the frame.
+	 * Configura e aggiunge il pulsante di conferma al frame.
 	 */
 	private void completeConfirmButton() {
 		this.confirmButton = new JButton("Confirm");
@@ -97,7 +97,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Initializes and adds the hit strategy JComboBox to the frame.
+	 * Inizializza e aggiunge il JComboBox della strategia di hit al frame.
 	 */
 	private void completeBoxHitStrategy() {
 		this.hitComboBox = new JComboBox<>(HitStrategy.values());
@@ -107,7 +107,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Configures and adds the hit strategy label to the frame.
+	 * Configura e aggiunge l'etichetta della strategia di hit al frame.
 	 */
 	private void completeLabelHitStrategy() {
 		JLabel hitLabel = new JLabel("Choose a shooting strategy:");
@@ -117,14 +117,14 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Adds an ActionListener to the hit strategy JComboBox.
+	 * Aggiunge un ActionListener al JComboBox della strategia di hit.
 	 */
 	private void addActionListenerToHitComboBox() {
 		this.hitComboBox.addActionListener(_ -> writeHitToProperties(((HitStrategy) Objects.requireNonNull(hitComboBox.getSelectedItem())).getFullClassName()));
 	}
 
 	/**
-	 * Initializes and adds the place strategy JComboBox to the frame.
+	 * Inizializza e aggiunge il JComboBox della strategia di place al frame.
 	 */
 	private void completeBoxPlaceStrategy() {
 		this.placeComboBox = new JComboBox<>(PlaceStrategy.values());
@@ -134,7 +134,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Configures and adds the place strategy label to the frame.
+	 * Configura e aggiunge l'etichetta della strategia di place al frame.
 	 */
 	private void completeLabelPlaceStrategy() {
 		JLabel placeLabel = new JLabel("Choose a place ships strategy:");
@@ -144,14 +144,14 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Adds an ActionListener to the place strategy JComboBox.
+	 * Aggiunge un ActionListener al JComboBox della strategia di place.
 	 */
 	private void addActionListenerToPlaceComboBox() {
 		this.placeComboBox.addActionListener(_ -> writePlaceToProperties(((PlaceStrategy) Objects.requireNonNull(placeComboBox.getSelectedItem())).getFullClassName()));
 	}
 
 	/**
-	 * Adds an ActionListener to the confirm button to save the selected strategies and visibility.
+	 * Aggiunge un ActionListener al pulsante di conferma per salvare le strategie selezionate e la visibilità.
 	 */
 	private void addActionListenerTopConfirmButton() {
 		this.confirmButton.addActionListener(_ -> {
@@ -169,7 +169,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Configures and adds the ships visibility label to the frame.
+	 * Configura e aggiunge l'etichetta della visibilità delle navi al frame.
 	 */
 	private void completeShipsVisibleLabel() {
 		JLabel shipsVisibleLabel = new JLabel("Should the computer ships be visible?:");
@@ -179,7 +179,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Initializes and adds the ships visibility JComboBox to the frame.
+	 * Inizializza e aggiunge il JComboBox della visibilità delle navi al frame.
 	 */
 	private void completeShipsVisibleBox() {
 		String[] possibilities = { "NO", "YES" };
@@ -190,7 +190,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Adds an ActionListener to the ships visibility JComboBox.
+	 * Aggiunge un ActionListener al JComboBox della visibilità delle navi.
 	 */
 	private void addActionListenerToVisibilityComboBox() {
 		this.shipVisibilityBox.addActionListener(_ -> {
@@ -201,16 +201,16 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Returns the visibility status of the ships.
+	 * Restituisce lo stato di visibilità delle navi.
 	 *
-	 * @return true if ships are visible, false otherwise
+	 * @return true se le navi sono visibili, false altrimenti.
 	 */
 	public boolean shipsVisible() {
 		return this.isShipsVisible;
 	}
 
 	/**
-	 * Writes default values for hit and place strategies to properties file.
+	 * Scrive i valori di default per le strategie di hit e place nel file di proprietà.
 	 */
 	private void DefaultValuesToProperties() {
 		this.writeHitToProperties(HitStrategy.RANDOM.getFullClassName());
@@ -218,9 +218,9 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Writes the selected hit strategy to the properties file.
+	 * Scrive la strategia di hit selezionata nel file di proprietà.
 	 *
-	 * @param hitStrategy the full class name of the selected hit strategy
+	 * @param hitStrategy il nome completo della classe della strategia di hit selezionata.
 	 */
 	public void writeHitToProperties(String hitStrategy) {
 		Properties props = new Properties();
@@ -239,9 +239,9 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Writes the selected place strategy to the properties file.
+	 * Scrive la strategia di place selezionata nel file di proprietà.
 	 *
-	 * @param placeShipStrategy the full class name of the selected place strategy
+	 * @param placeShipStrategy il nome completo della classe della strategia di place selezionata.
 	 */
 	public void writePlaceToProperties(String placeShipStrategy) {
 		Properties props = new Properties();
@@ -260,7 +260,7 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Reads settings from the properties file or uses default values if file not found.
+	 * Legge le impostazioni dal file di proprietà o utilizza i valori di default se il file non viene trovato.
 	 */
 	public void readSettingsFromFileOrDefaults() {
 		Properties props = new Properties();
@@ -279,10 +279,10 @@ public class SettingsJFrame extends JFrame {
 	}
 
 	/**
-	 * Sets the hit and place strategies in the JComboBoxes based on the properties file.
+	 * Imposta le strategie di hit e place nei JComboBox in base al file di proprietà.
 	 *
-	 * @param hitStrategyClass the full class name of the hit strategy
-	 * @param placeStrategyClass the full class name of the place strategy
+	 * @param hitStrategyClass il nome completo della classe della strategia di hit.
+	 * @param placeStrategyClass il nome completo della classe della strategia di place.
 	 */
 	private void setHitAndPlaceStrategiesBasedOnProperties(String hitStrategyClass, String placeStrategyClass) {
 		for (HitStrategy hitStrategy : HitStrategy.values()) {

@@ -17,8 +17,9 @@ import model.ShipType;
 
 /**
  * Pannello per la selezione delle navi e della loro direzione.
+ * Permette di selezionare il tipo di nave e la sua direzione,
+ * nonché tenere traccia del numero di navi disponibili.
  *
- * @author Luca
  * @version 1.2
  */
 public class ShipBoardJPanel extends JPanel {
@@ -40,6 +41,9 @@ public class ShipBoardJPanel extends JPanel {
 	// La mappa per tenere traccia delle navi usate
 	private final Map<ShipType, Integer> usedShipsMap = new HashMap<>();
 
+	/**
+	 * Costruttore che inizializza i componenti del pannello.
+	 */
 	public ShipBoardJPanel() {
 		// Inizializzazione componenti
 		this.possibleShipsBox = new JComboBox<>(ShipType.getAllShipTypes().toArray(new ShipType[0]));
@@ -49,6 +53,9 @@ public class ShipBoardJPanel extends JPanel {
 		initializeComponents();
 	}
 
+	/**
+	 * Inizializza i componenti del pannello.
+	 */
 	private void initializeComponents() {
 
 		JLabel directionLabel = new JLabel("Direction:");
@@ -111,17 +118,31 @@ public class ShipBoardJPanel extends JPanel {
 		updateShipTypeCountLabel(selectedShipType);
 	}
 
+	/**
+	 * Aggiorna l'etichetta che mostra il numero di navi disponibili per un tipo di nave specifico.
+	 *
+	 * @param shipType il tipo di nave selezionato
+	 */
 	private void updateShipTypeCountLabel(ShipType shipType) {
 		int availableShips = shipType.getNumberOfAllowedShips() - getUsedShipsCount(shipType);
 		shipsTypeCountLabel.setText(SHIP_TYPE_COUNT_LABEL_TEXT + availableShips);
 	}
 
+	/**
+	 * Restituisce il numero di navi usate per un tipo di nave specifico.
+	 *
+	 * @param shipType il tipo di nave
+	 * @return il numero di navi usate per il tipo di nave
+	 */
 	private int getUsedShipsCount(ShipType shipType) {
 		return usedShipsMap.getOrDefault(shipType, 0);
 	}
 
 	/**
-	 * Aggiorna la label che mostra il numero di navi disponibili per tipo di nave.
+	 * Imposta l'etichetta con il numero di navi disponibili per un tipo di nave specifico.
+	 *
+	 * @param type il tipo di nave
+	 * @param count il numero di navi usate
 	 */
 	public void setShipSingleCountLabel(ShipType type, int count) {
 		usedShipsMap.put(type, count);
@@ -131,7 +152,9 @@ public class ShipBoardJPanel extends JPanel {
 	}
 
 	/**
-	 * Aggiorna la label che mostra il numero di navi disponibili totalmente sul tabellone.
+	 * Imposta l'etichetta con il numero totale di navi sul tabellone.
+	 *
+	 * @param count il numero totale di navi
 	 */
 	public void setShipTotalCountLabel(int count) {
 		shipsTotalCountLabel.setText(SHIP_TOTAL_COUNT_LABEL_TEXT + count);
@@ -140,7 +163,7 @@ public class ShipBoardJPanel extends JPanel {
 	/**
 	 * Restituisce il tipo di nave selezionato.
 	 *
-	 * @return Ship type selectedShip type
+	 * @return il tipo di nave selezionato
 	 */
 	public ShipType getSelectedShipType() {
 		return this.selectedShipType;
@@ -149,7 +172,7 @@ public class ShipBoardJPanel extends JPanel {
 	/**
 	 * Restituisce la direzione della nave selezionata.
 	 *
-	 * @return Direction della nave selezionata
+	 * @return la direzione della nave selezionata
 	 */
 	public Direction getSelectedDirection() {
 		return this.shipDirection;

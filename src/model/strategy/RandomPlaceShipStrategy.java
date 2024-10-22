@@ -5,14 +5,19 @@ import java.util.Random;
 import model.Direction;
 import model.Ship;
 import model.ShipType;
+
 /**
- * 
- * @author Luca Grasso
- * @version 1.0
+ * Classe che implementa una strategia casuale per piazzare le navi.
  *
+ * @version 1.0
  */
 public class RandomPlaceShipStrategy implements PlaceShipStrategy {
 
+	/**
+	 * Piazza una nave in una posizione casuale.
+	 *
+	 * @return una nave posizionata in una posizione casuale.
+	 */
 	@Override
 	public Ship placeRandomShip() {
 		Random random = new Random();

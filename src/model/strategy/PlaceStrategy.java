@@ -1,24 +1,39 @@
 package model.strategy;
+
 /**
- * 
+ * Enumerazione che definisce le diverse strategie che il giocatore computer può utilizzare per piazzare le navi.
+ *
  * @author Luca Grasso
  * @version 1.0
- *
  */
-
-	// This enum is used to define the different strategies that the computer player can use to place the ships
-	// The fullClassName attribute is used to get the full class name of the strategy.
-
 public enum PlaceStrategy {
+
+	/**
+	 * Strategia random per piazzare le navi.
+	 */
 	RANDOM("model.strategy.RandomPlaceShipStrategy"),
+
+	/**
+	 * Strategia avanzata per piazzare le navi.
+	 */
 	HARD("model.strategy.HardPlaceShipStrategy");
 
 	private final String fullClassName;
 
+	/**
+	 * Costruttore per l'enum PlaceStrategy.
+	 *
+	 * @param fullClassName il nome completo della classe della strategia.
+	 */
 	PlaceStrategy(String fullClassName) {
 		this.fullClassName = fullClassName;
 	}
 
+	/**
+	 * Ottiene il nome completo della classe della strategia.
+	 *
+	 * @return il nome completo della classe della strategia.
+	 */
 	public String getFullClassName() {
 		return this.fullClassName;
 	}

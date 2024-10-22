@@ -9,26 +9,26 @@ import model.DomainException;
 import model.strategy.PlaceShipStrategy;
 
 /**
+ * Classe che implementa il pattern Factory per creare istanze di strategie
+ * di posizionamento delle navi.
  *
- * @author Luca Grasso
  * @version 1.0
- *
- *
- * This is a classic approach of the Factory Pattern
- * where a method (getPlaceShipStrategy()) returns an instance of some base type
- * or interface (PlaceShipStrategy), with the actual subtype instantiated depending
- * on the logic enclosed within the method. This enables flexibility as you can decide
- * the exact type of object needed at runtime.
- * */
-
-
+ */
 public class PlaceShipFactory {
     private final Properties properties;
 
+    /**
+     * Costruttore che inizializza le proprietà leggendo dal file di configurazione.
+     */
     public PlaceShipFactory() {
         this.properties = readPropertiesFile();
     }
 
+    /**
+     * Legge il file delle proprietà.
+     *
+     * @return Le proprietà lette dal file.
+     */
     private Properties readPropertiesFile() {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream("src/strategyProperties.properties")) {
@@ -39,11 +39,24 @@ public class PlaceShipFactory {
         return properties;
     }
 
+    /**
+     * Restituisce un'istanza della strategia di posizionamento delle navi
+     * basata sulle proprietà lette.
+     *
+     * @return Un'istanza di PlaceShipStrategy.
+     */
     public PlaceShipStrategy getPlaceShipStrategy() {
         String className = properties.getProperty("placeShipStrategy");
         return createStrategyInstance(className);
     }
 
+    /**
+     * Crea un'istanza della strategia di posizionamento delle navi
+     * data la classe della strategia.
+     *
+     * @param className Il nome della classe della strategia.
+     * @return Un'istanza di PlaceShipStrategy.
+     */
     private PlaceShipStrategy createStrategyInstance(String className) {
         try {
             return (PlaceShipStrategy) Class.forName(className).getDeclaredConstructor().newInstance();
