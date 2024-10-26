@@ -8,6 +8,8 @@ import java.util.List; // Usa l'interfaccia List invece di ArrayList
 import model.*;
 import view.BattleShipGameView;
 
+import javax.swing.*;
+
 /**
  * Controller per il gioco di Battaglia Navale.
  * Gestisce la logica di gioco e l'interazione tra il modello e la vista.
@@ -176,11 +178,18 @@ public class GameController {
 	}
 
 	/**
-	 * Termina il gioco e reimposta la partita.
+	 * Metodo che gestisce la fine del gioco.
 	 */
 	public void endGame() {
-		view.closeApplication();
-		this.setUpGame();
+		int response = JOptionPane.showConfirmDialog(null, "Vuoi continuare a giocare?", "Fine del gioco",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (response == JOptionPane.YES_OPTION) {
+			view.closeApplication();
+			this.setUpGame(); // imposta nuovamente il gioco se l'utente sceglie di continuare dall'inizio
+		} else {
+			view.closeApplication(); // chiude l'applicazione se l'utente sceglie di no
+		}
 	}
 
 	/**
