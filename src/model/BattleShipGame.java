@@ -39,15 +39,6 @@ public class BattleShipGame {
 	}
 
 	/**
-	 * Restituisce lo stato corrente del gioco.
-	 *
-	 * @return lo stato corrente del gioco.
-	 */
-	public GameState getCurrentGameState() {
-		return this.currentGameState;
-	}
-
-	/**
 	 * Imposta lo stato corrente del gioco.
 	 *
 	 * @param gameState Il nuovo stato del gioco.

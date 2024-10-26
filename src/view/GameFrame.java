@@ -36,7 +36,6 @@ public class GameFrame extends JFrame {
 	public final static int WIDTH_FRAME = (int) (HEIGHT_FRAME * 2.5);
 	public final static int PANEL_SIZE = (int) (HEIGHT_FRAME * 4 / 5);
 	public final static int NUM_COLUMNS = 10;
-	public boolean tryToStart = false;
 
 	/**
 	 * Costruttore del frame di gioco.
