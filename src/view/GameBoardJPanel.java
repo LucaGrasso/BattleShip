@@ -34,6 +34,18 @@ public class GameBoardJPanel extends JPanel {
 	}
 
 	/**
+	 * Metodo per il reset della griglia di gioco, rimuovendo tutti i componenti.
+	 *
+	 */
+
+	public void reset() {
+		// Logica per resettare la griglia del gioco
+		removeAll();  // Rimuove tutti i componenti per un reset completo
+		revalidate();
+		repaint();
+	}
+
+	/**
 	 * Aggiunge un listener per gli eventi di clic del mouse.
 	 *
 	 * @param listener Il listener da aggiungere.

@@ -202,9 +202,11 @@ public class GameController {
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 		if (response == JOptionPane.YES_OPTION) {
-			this.setUpGame(); // imposta nuovamente il gioco se l'utente sceglie di continuare dall'inizio
+			//model.resetGame();  // Reset del gioco attraverso il modello
+			view.updateGameBoard();  // Aggiorna la vista per riflettere il nuovo stato del gioco
+			setUpGame();  // Configura il gioco
 		} else {
-			view.closeApplication(); // chiude l'applicazione se l'utente sceglie di no
+			view.closeApplication();  // Chiude l'applicazione
 		}
 	}
 

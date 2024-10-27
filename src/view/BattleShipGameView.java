@@ -19,7 +19,7 @@ import model.ShipType;
 public class BattleShipGameView {
 
 	private static BattleShipGameView instance;
-	private final GameFrame gameFrame;
+	private GameFrame gameFrame;
 	private SettingsJFrame settingsJFrame;
 	private String playerName;
 
@@ -46,6 +46,17 @@ public class BattleShipGameView {
 		return instance;
 	}
 
+	public void updateGameBoard() {
+		// Resetta i pannelli della griglia e delle navi
+		gameFrame.closeApplication();
+		gameFrame = new GameFrame();
+		gameFrame.launch(this.playerName);
+		gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		gameFrame.setVisible(true);
+
+
+		//gameFrame.resetGameFrame(playerName);
+	}
 
 	/**
 	 * Displays a dialog to ask the player for their name.
@@ -53,7 +64,7 @@ public class BattleShipGameView {
 	 * @return the player's name
 	 */
 	public String askPlayerName() {
-		playerName = JOptionPane.showInputDialog("Enter your nickname/name?");
+		this.playerName = JOptionPane.showInputDialog("Enter your nickname/name?");
 		return playerName;
 	}
 

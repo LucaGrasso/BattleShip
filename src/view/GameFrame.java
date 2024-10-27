@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
  */
 public class GameFrame extends JFrame {
 
-	private GameBoardJPanel panel1;
+    private GameBoardJPanel panel1;
 	private GameBoardJPanel panel2;
 	private final JPanel namePanel1 = new JPanel();
 	private final JPanel namePanel2 = new JPanel();
@@ -51,7 +51,7 @@ public class GameFrame extends JFrame {
 	 */
 	public void launch(String name) {
 		// Posiziona il frame al centro dello schermo
-		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
+        this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		this.setLayout(null);
@@ -65,6 +65,33 @@ public class GameFrame extends JFrame {
 		this.setStartButton();
 		this.setSettingsButton();
 	}
+
+
+	void resetGameFrame(String playerName) {
+		//this.shipBordJPanel.reset();
+		this.panel1 = null;
+		this.panel2 = null;
+
+		// Reimposta i pannelli e i componenti del gioco
+		this.completeSettingsShipBordJPanel();
+		this.completeSettingsNamePanel1(playerName);
+		this.completeSettingsNamePanel2();
+		this.completeSettingsGameBoardPanel1();
+		this.completeSettingsGameBoardPanel2();
+		this.setStartButton();
+		this.setSettingsButton();
+		enableButtons();
+		// Riabilita i pulsanti o componenti eventualmente disabilitati
+		//this.enableButtons();
+	}
+
+	private void enableButtons() {
+		// Supponendo che i pulsanti siano accessibili tramite la vista
+		settingsButton.setEnabled(true);
+		startButton.setEnabled(true);
+		// Riabilita altri pulsanti se necessario
+	}
+
 
 	/**
 	 * Imposta il pulsante delle impostazioni.

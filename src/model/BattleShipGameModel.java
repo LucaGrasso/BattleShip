@@ -23,6 +23,15 @@ public class BattleShipGameModel {
 	}
 
 	/**
+	 * Reset di tutto il model per iniziare un nuovo gioco.
+	 *
+	 */
+
+	public void resetGame() {
+		this.getGame().resetGame();
+	}
+
+	/**
 	 * Imposta il nome del giocatore umano.
 	 *
 	 * @param playerName Il nome del giocatore umano.

@@ -39,6 +39,21 @@ public class BattleShipGame {
 	}
 
 	/**
+	 * Restituisce lo stato corrente del gioco.
+	 *
+	 * @return lo stato corrente del gioco.
+	 */
+
+	public void resetGame() {
+		// Resetta i giocatori
+		humanPlayer.reset();
+		computerPlayer.reset();
+
+		// Ripristina lo stato del gioco
+		currentGameState = new NewGameState(this);
+	}
+
+	/**
 	 * Imposta lo stato corrente del gioco.
 	 *
 	 * @param gameState Il nuovo stato del gioco.

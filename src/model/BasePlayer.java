@@ -33,6 +33,15 @@ public abstract class BasePlayer implements Player {
     }
 
     /**
+     * Resetta il giocatore.
+     */
+    public void reset() {
+        // Svuota la lista delle navi e listener del punteggio
+        ships.clear();
+        scoreListeners.clear();
+    }
+
+    /**
      * Restituisce il nome del giocatore corrente.
      *
      * @return Il nome del giocatore

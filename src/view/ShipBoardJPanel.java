@@ -25,10 +25,10 @@ import model.ShipType;
 public class ShipBoardJPanel extends JPanel {
 
 	// Componenti del pannello
-	private final JComboBox<ShipType> possibleShipsBox;
-	private final JLabel shipsTypeCountLabel;
-	private final JLabel shipsTotalCountLabel;
-	private final JLabel legendLabel;
+	private JComboBox<ShipType> possibleShipsBox;
+	private JLabel shipsTypeCountLabel;
+	private JLabel shipsTotalCountLabel;
+	private JLabel legendLabel;
 
 	private ShipType selectedShipType = ShipType.AIRCRAFT_CARRIER;
 	private Direction shipDirection = Direction.VERTICAL;
@@ -116,6 +116,20 @@ public class ShipBoardJPanel extends JPanel {
 
 		// Inizializza la JLabel con il valore della nave di default
 		updateShipTypeCountLabel(selectedShipType);
+	}
+
+	/**
+	 * Metodo per il reset del pannello delle navi, rimuovendo tutti i componenti.
+	 */
+	public void reset() {
+		// Logica per resettare la disposizione delle navi
+		this.removeAll();  // Rimuove tutte le navi e resetta il pannello
+		this.possibleShipsBox = new JComboBox<>(ShipType.getAllShipTypes().toArray(new ShipType[0]));
+		this.shipsTypeCountLabel = new JLabel(SHIP_TYPE_COUNT_LABEL_TEXT + 0);
+		this.shipsTotalCountLabel = new JLabel(SHIP_TOTAL_COUNT_LABEL_TEXT + 0);
+		this.legendLabel = new JLabel(LEGEND_LABEL_TEXT);
+		initializeComponents();
+
 	}
 
 	/**
