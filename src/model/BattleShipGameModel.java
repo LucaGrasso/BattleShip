@@ -148,7 +148,7 @@ public class BattleShipGameModel implements IBattleShipGameModel {
 	 * Aggiunge un numero di colpo alla nave del giocatore umano.
 	 *
 	 * @param hitNumber Il numero del colpo.
-	 * @return True se il colpo è stato aggiunto, otherwise False.
+	 * @return True se il colpo è stato aggiunto, altrimenti False.
 	 */
 	public boolean addHitNumberToHumanPlayerShip(int hitNumber) {
 		return this.getHumanPlayer().addHitToShip(hitNumber);

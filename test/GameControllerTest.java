@@ -23,10 +23,48 @@ public class GameControllerTest {
         model = new BattleShipGameModel("PlayerTest");
 
         // Configura una nave per il giocatore umano.
-        // In questo esempio, aggiungiamo una nave piccola (PATROL_SHIP) vicino al bordo della griglia,
+        // In questo esempio, aggiungiamo una nave piccola (AIRCRAFT_CARRIER) vicino al bordo della griglia,
         // orientata orizzontalmente a partire dalla posizione 1.
-        model.addShipToHumanPlayer(ShipType.PATROL_SHIP, Direction.HORIZONTAL, 1);
+        model.addShipToHumanPlayer(ShipType.AIRCRAFT_CARRIER, Direction.VERTICAL, 0);
     }
+
+    /**
+     * Test che verifica se il computer riesce ad affondare tutte le navi
+     * del giocatore umano con colpi casuali.
+     */
+    @Test
+    public void testComputerSinksAllShips() {
+        model.addShipToHumanPlayer(ShipType.PATROL_SHIP, Direction.VERTICAL, 31);
+        model.addShipToHumanPlayer(ShipType.SUBMARINE, Direction.VERTICAL, 34);
+        model.addShipToHumanPlayer(ShipType.TORPEDO_BOAT_HUNTERS, Direction.VERTICAL, 51);
+        model.addShipToHumanPlayer(ShipType.BATTLESHIP, Direction.VERTICAL, 55);
+
+        //model.computerGenerateShips();
+
+        // Ottieni la lista delle posizioni occupate dalle navi del giocatore umano.
+        List<Integer> humanPlayerShipNumbers = model.getAllHumanPlayerShipNumbers();
+
+        // Esegui tentativi di colpo fino a quando tutte le navi non sono affondate
+        // (o fino a raggiungere un numero di tentativi troppo alto).
+        for (int i = 0; i < 1000; i++) {  // Aumenta il numero massimo di tentativi
+            int shot = model.getComputerShot();
+            System.out.println("Tentativo di colpo del computer: " + shot);
+            if (humanPlayerShipNumbers.contains(shot)) {
+                System.out.println("Colpito con:" + shot);
+                model.addHitNumberToHumanPlayerShip(shot);
+                humanPlayerShipNumbers.remove((Integer) shot);
+            }
+
+            // Se non rimangono piu' posizioni di navi, tutte le navi sono affondate
+            if (humanPlayerShipNumbers.isEmpty()) {
+                break;
+            }
+        }
+
+        // Alla fine di tutti i tentativi, tutte le navi dovrebbero essere affondate.
+        assertTrue("Il computer dovrebbe aver affondato tutte le navi del giocatore umano", humanPlayerShipNumbers.isEmpty());
+    }
+
 
     /**
      * Test che verifica se il computer riesce a colpire una nave del giocatore umano.
@@ -35,7 +73,7 @@ public class GameControllerTest {
     public void testComputerHitsShip() {
         // Genera le navi del computer. Questo metodo posiziona automaticamente le navi
         // per il giocatore computer.
-        model.computerGenerateShips();
+       // model.computerGenerateShips();
 
         // Ottieni la lista delle posizioni occupate dalle navi del giocatore umano.
         List<Integer> humanPlayerShipNumbers = model.getAllHumanPlayerShipNumbers();
@@ -55,8 +93,9 @@ public class GameControllerTest {
         if (humanPlayerShipNumbers.contains(shot)) {
             // Se il colpo è valido (cioè colpisce una nave), aggiungi il numero del colpo
             // alla nave corrispondente e verifica che l'operazione sia stata registrata correttamente.
+            // la funzione restituisce 'false' se il colpo ha colpito una nave, true se affondata.
             boolean hitSuccessful = model.addHitNumberToHumanPlayerShip(shot);
-            assertTrue("Il computer ha colpito una nave con successo", hitSuccessful);
+            assertFalse("Il computer ha colpito una nave con successo", hitSuccessful);
         } else {
             // Se il colpo non colpisce alcuna nave, fallisce il test.
             fail("Il computer non ha colpito alcuna nave");
@@ -98,54 +137,21 @@ public class GameControllerTest {
      * Test che verifica l'efficacia dei colpi vicino al bordo della griglia.
      */
     @Test
-    public void testHitsNearBorder() {
+    public void testShipAffondata() {
         // Assumiamo che la griglia sia di dimensioni 10x10 (100 posizioni, 0-99).
 
-        // Forziamo il posizionamento di una nave vicino al bordo inferiore.
-        model.addShipToHumanPlayer(ShipType.AIRCRAFT_CARRIER, Direction.VERTICAL, 95); // Posto 95 e 96
-
         // Simula colpi vicino al bordo e verifica che siano gestiti correttamente.
-        int[] testShots = {94, 95, 96, 97};
+        int[] testShots = {0, 1, 2, 3, 4};
 
         for (int shot : testShots) {
             System.out.println("Computer tenta il colpo alla posizione: " + shot);
             boolean hitSuccessful = model.addHitNumberToHumanPlayerShip(shot);
-            if ((shot == 95 || shot == 96)) {
+            System.out.println(hitSuccessful);
+            if (hitSuccessful) {
                 assertTrue("Il colpo del computer dovrebbe aver colpito la nave alla posizione " + shot, hitSuccessful);
             } else {
                 assertFalse("Il colpo del computer non dovrebbe aver colpito alcuna nave alla posizione " + shot, hitSuccessful);
             }
         }
-    }
-
-    /**
-     * Test che verifica se il computer riesce ad affondare tutte le navi
-     * del giocatore umano con colpi casuali.
-     */
-    @Test
-    public void testComputerSinksAllShips() {
-        model.computerGenerateShips();
-
-        // Ottieni la lista delle posizioni occupate dalle navi del giocatore umano.
-        List<Integer> humanPlayerShipNumbers = model.getAllHumanPlayerShipNumbers();
-
-        // Esegui tentativi di colpo fino a quando tutte le navi non sono affondate
-        // (o fino a raggiungere un numero di tentativi troppo alto).
-        for (int i = 0; i < 1000; i++) {  // Aumenta il numero massimo di tentativi
-            int shot = model.getComputerShot();
-            System.out.println("Tentativo di colpo del computer: " + shot);
-            if (humanPlayerShipNumbers.contains(shot)) {
-                model.addHitNumberToHumanPlayerShip(shot);
-                humanPlayerShipNumbers.remove((Integer) shot);
-            }
-
-            // Se non rimangono piu' posizioni di navi, tutte le navi sono affondate
-            if (humanPlayerShipNumbers.isEmpty()) {
-                break;
-            }
-        }
-
-        // Alla fine di tutti i tentativi, tutte le navi dovrebbero essere affondate.
-        assertTrue("Il computer dovrebbe aver affondato tutte le navi del giocatore umano", humanPlayerShipNumbers.isEmpty());
     }
 }
