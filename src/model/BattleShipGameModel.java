@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class BattleShipGameModel {
+public class BattleShipGameModel implements IBattleShipGameModel {
 
 	private final BattleShipGame game;
 
@@ -20,24 +20,6 @@ public class BattleShipGameModel {
 	 */
 	public BattleShipGameModel(String playerName) {
 		this.game = new BattleShipGame(playerName);
-	}
-
-	/**
-	 * Reset di tutto il model per iniziare un nuovo gioco.
-	 *
-	 */
-
-	public void resetGame() {
-		this.getGame().resetGame();
-	}
-
-	/**
-	 * Imposta il nome del giocatore umano.
-	 *
-	 * @param playerName Il nome del giocatore umano.
-	 */
-	public void setHumanPlayerName(String playerName) {
-		this.getHumanPlayer().setName(playerName);
 	}
 
 	/**
@@ -56,24 +38,6 @@ public class BattleShipGameModel {
 	 */
 	public String getComputerPlayerName() {
 		return this.getComputerPlayer().getName();
-	}
-
-	/**
-	 * Restituisce la lista delle navi del giocatore umano.
-	 *
-	 * @return La lista delle navi del giocatore umano.
-	 */
-	public List<Ship> getHumanPlayerShip() {
-		return this.getHumanPlayer().getShips();
-	}
-
-	/**
-	 * Aggiunge una nave al giocatore umano.
-	 *
-	 * @param ship La nave da aggiungere.
-	 */
-	public void addShipToHumanPlayer(Ship ship) {
-		this.getHumanPlayer().addShip(ship);
 	}
 
 	/**

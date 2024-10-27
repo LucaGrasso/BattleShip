@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classe che rappresenta una nave all'interno del gioco.
@@ -9,14 +10,14 @@ import java.util.ArrayList;
  *
  * @version 1.0
  */
-public class Ship {
+public class Ship implements IShip {
 
 	private final ArrayList<Integer> shipNumbers = new ArrayList<>();
 	private final ArrayList<Integer> shipNumbersHit = new ArrayList<>();
-	private Direction shipDirection;
-	private ShipType shipType;
+	private final Direction shipDirection;
+	private final ShipType shipType;
 
-	/**A
+	/**
 	 * Costruttore per la classe Ship.
 	 *
 	 * @param shipType      Il tipo di nave.
@@ -24,11 +25,10 @@ public class Ship {
 	 * @param startPosition La posizione iniziale della nave.
 	 */
 	public Ship(ShipType shipType, Direction shipDirection, int startPosition) {
-		this.setShipDirection(shipDirection);
-		this.setShipType(shipType);
-		this.setAllShipNumber(startPosition);
+		this.shipDirection = shipDirection;
+		this.shipType = shipType;
+		setAllShipNumbers(startPosition);
 	}
-
 
 	/**
 	 * Verifica se un determinato numero è presente nella nave.
@@ -36,6 +36,7 @@ public class Ship {
 	 * @param number il numero da verificare.
 	 * @return true se il numero è presente nella nave, altrimenti false.
 	 */
+	@Override
 	public boolean isNumberInShip(int number) {
 		return shipNumbers.contains(number);
 	}
@@ -45,24 +46,23 @@ public class Ship {
 	 *
 	 * @param startPosition la posizione iniziale della nave.
 	 */
-	private void setAllShipNumber(int startPosition) {
-		if (this.getShipDirection().equals(Direction.HORIZONTAL)) {
-			int endPosition = startPosition + (10 * (shipType.getNumberBoxes() - 1));
-			if (endPosition < 100) {
-				for (int i = startPosition; i <= endPosition; i += 10) {
-					shipNumbers.add(i);
-				}
-			} else {
+	private void setAllShipNumbers(int startPosition) {
+		int numberBoxes = shipType.getNumberBoxes();
+		if (shipDirection.equals(Direction.HORIZONTAL)) {
+			int endPosition = startPosition + (10 * (numberBoxes - 1));
+			if (endPosition >= 100) {
 				throw new DomainException("The ship cannot be placed horizontally!");
 			}
+			for (int i = startPosition; i <= endPosition; i += 10) {
+				shipNumbers.add(i);
+			}
 		} else {
-			int endPosition = startPosition + shipType.getNumberBoxes() - 1;
-			if ((endPosition % 10) > (startPosition % 10)) {
-				for (int i = startPosition; i <= endPosition; i++) {
-					shipNumbers.add(i);
-				}
-			} else {
+			int endPosition = startPosition + numberBoxes - 1;
+			if ((endPosition % 10) <= (startPosition % 10)) {
 				throw new DomainException("The ship cannot be placed vertically!");
+			}
+			for (int i = startPosition; i <= endPosition; i++) {
+				shipNumbers.add(i);
 			}
 		}
 	}
@@ -72,13 +72,14 @@ public class Ship {
 	 *
 	 * @return una lista di numeri rappresentanti le posizioni circostanti la nave.
 	 */
+	@Override
 	public ArrayList<Integer> getNumbersRandomShip() {
 		ArrayList<Integer> numbersRandom = new ArrayList<>();
 
-		int firstNumber = this.getShipNumbers().getFirst(); // was getFirst, corrected
-		int lastNumber = this.getShipNumbers().getLast(); // was getLast, corrected
+		int firstNumber = shipNumbers.get(0);
+		int lastNumber = shipNumbers.get(shipNumbers.size() - 1);
 
-		for (Integer integer : this.getShipNumbers()) {
+		for (Integer integer : shipNumbers) {
 			if (integer.equals(firstNumber) || integer.equals(lastNumber)) {
 				addHorizontalAndVerticalNumbers(numbersRandom, integer);
 			}
@@ -90,48 +91,28 @@ public class Ship {
 		return numbersRandom;
 	}
 
-	private void addHorizontalAndVerticalNumbers(
-			ArrayList<Integer> numbersRandom, Integer integer) {
-		if ((integer % 10) != 0) {
-			numbersRandom.add(integer - 1);
-		}
-		if ((integer % 10) != 9) {
-			numbersRandom.add(integer + 1);
-		}
-		if (integer - 10 >= 0) {
-			numbersRandom.add(integer - 10);
-		}
-		if (integer + 10 < 100) {
-			numbersRandom.add(integer + 10);
-		}
-		if ((integer - 10) >= 0 && (integer % 10) != 0) {
-			numbersRandom.add(integer - 11);
-		}
-		if ((integer - 10) >= 0 && (integer % 10) != 9) {
-			numbersRandom.add(integer - 9);
-		}
-		if ((integer + 10) < 100 && (integer % 10) != 0) {
-			numbersRandom.add(integer + 9);
-		}
-		if ((integer + 10) < 100 && (integer % 10) != 9) {
-			numbersRandom.add(integer + 11);
+	private void addHorizontalAndVerticalNumbers(List<Integer> numbersRandom, Integer integer) {
+		int[] adjustments = {-1, 1, -10, 10, -11, -9, 9, 11};
+		for (int adj : adjustments) {
+			int newNumber = integer + adj;
+			if (isValidPosition(newNumber, integer)) {
+				numbersRandom.add(newNumber);
+			}
 		}
 	}
 
-	private void addMiddleHorizontalAndVerticalNumbers(
-			ArrayList<Integer> numbersRandom, Integer integer) {
-		if ((integer % 10) != 0) {
-			numbersRandom.add(integer - 1);
+	private void addMiddleHorizontalAndVerticalNumbers(List<Integer> numbersRandom, Integer integer) {
+		int[] adjustments = {-1, 1, -10, 10};
+		for (int adj : adjustments) {
+			int newNumber = integer + adj;
+			if (isValidPosition(newNumber, integer)) {
+				numbersRandom.add(newNumber);
+			}
 		}
-		if ((integer % 10) != 9) {
-			numbersRandom.add(integer + 1);
-		}
-		if (integer - 10 >= 0) {
-			numbersRandom.add(integer - 10);
-		}
-		if (integer + 10 < 100) {
-			numbersRandom.add(integer + 10);
-		}
+	}
+
+	private boolean isValidPosition(int position, int reference) {
+		return position >= 0 && position < 100 && Math.abs(position / 10 - reference / 10) <= 1 && Math.abs(position % 10 - reference % 10) <= 1;
 	}
 
 	/**
@@ -139,19 +120,12 @@ public class Ship {
 	 *
 	 * @param hitNumber il numero colpito.
 	 */
+	@Override
 	public void addNumberHit(int hitNumber) {
-		if (!this.getShipNumbers().contains(hitNumber)) {
+		if (!shipNumbers.contains(hitNumber)) {
 			throw new DomainException("Cannot hit because it is not a ship number (Ship class)");
 		}
-		this.getShipNumbersHit().add(hitNumber);
-	}
-
-	private void setShipDirection(Direction shipDirection) {
-		this.shipDirection = shipDirection;
-	}
-
-	private void setShipType(ShipType shipType) {
-		this.shipType = shipType;
+		shipNumbersHit.add(hitNumber);
 	}
 
 	/**
@@ -159,8 +133,9 @@ public class Ship {
 	 *
 	 * @return la lista delle posizioni occupate dalla nave.
 	 */
+	@Override
 	public ArrayList<Integer> getShipNumbers() {
-		return shipNumbers;
+		return new ArrayList<>(shipNumbers);
 	}
 
 	/**
@@ -168,8 +143,9 @@ public class Ship {
 	 *
 	 * @return la lista delle posizioni colpite della nave.
 	 */
+	@Override
 	public ArrayList<Integer> getShipNumbersHit() {
-		return shipNumbersHit;
+		return new ArrayList<>(shipNumbersHit);
 	}
 
 	/**
@@ -177,6 +153,7 @@ public class Ship {
 	 *
 	 * @return la direzione della nave.
 	 */
+	@Override
 	public Direction getShipDirection() {
 		return shipDirection;
 	}
@@ -186,6 +163,7 @@ public class Ship {
 	 *
 	 * @return il tipo di nave.
 	 */
+	@Override
 	public ShipType getShipType() {
 		return shipType;
 	}

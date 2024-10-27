@@ -16,7 +16,7 @@ import javax.swing.*;
  *
  * @version 1.0
  */
-public class GameController {
+public class GameController implements IGameController {
 	private BattleShipGameModel model;
 	private BattleShipGameView view;
 
@@ -202,7 +202,6 @@ public class GameController {
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 		if (response == JOptionPane.YES_OPTION) {
-			//model.resetGame();  // Reset del gioco attraverso il modello
 			view.updateGameBoard();  // Aggiorna la vista per riflettere il nuovo stato del gioco
 			setUpGame();  // Configura il gioco
 		} else {

@@ -1,6 +1,8 @@
 package model.factory;
 
-import java.io.File;
+import model.DomainException;
+import model.strategy.HitShipStrategy;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,17 +11,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-import model.DomainException;
-import model.strategy.HitShipStrategy;
-
 /**
  * Factory per creare le strategie di colpire le navi nel gioco Battaglia Navale.
  *
  * @version 1.0
  */
-public class HitShipFactory {
+public class HitShipFactory implements IHitShipFactory {
 	private static final String PROPS_PATH = "src/strategyProperties.properties";
 	private static final String STRATEGY_PROP = "hitShipStrategy";
+	private static final String DEFAULT_STRATEGY = "model.strategy.RandomHitShipStrategy";
 
 	/**
 	 * Restituisce un'istanza della strategia di colpire le navi caricando le proprietà
@@ -30,7 +30,7 @@ public class HitShipFactory {
 	public HitShipStrategy getHitShipStrategy() {
 		createPropertiesFileIfNotExist();
 		Properties properties = loadPropertiesFromFile();
-		return createStrategyInstance(properties);
+		return createStrategyInstance(properties.getProperty(STRATEGY_PROP));
 	}
 
 	/**
@@ -41,9 +41,8 @@ public class HitShipFactory {
 		if (!Files.exists(propsFilePath)) {
 			try (FileWriter writer = new FileWriter(PROPS_PATH)) {
 				Properties properties = new Properties();
-				properties.setProperty(STRATEGY_PROP, "full.qualified.class.name");
+				properties.setProperty(STRATEGY_PROP, DEFAULT_STRATEGY);
 				properties.store(writer, "Properties for BattleShip Game");
-				writer.flush();
 			} catch (IOException e) {
 				throw new RuntimeException("Error creating properties file", e);
 			}
@@ -55,12 +54,12 @@ public class HitShipFactory {
 	 *
 	 * @return Le proprietà lette dal file.
 	 */
-	private Properties loadPropertiesFromFile(){
+	private Properties loadPropertiesFromFile() {
 		Properties properties = new Properties();
-		try (InputStream input = Files.newInputStream(new File("src/strategyProperties.properties").toPath())) {
+		try (InputStream input = Files.newInputStream(Paths.get(PROPS_PATH))) {
 			properties.load(input);
 		} catch (IOException e) {
-			throw new DomainException("Properties file not found (HitShipFactory)", e);
+			throw new DomainException("Unable to load properties file: " + PROPS_PATH, e);
 		}
 		return properties;
 	}
@@ -68,27 +67,36 @@ public class HitShipFactory {
 	/**
 	 * Crea un'istanza della strategia di colpire le navi data la classe della strategia.
 	 *
-	 * @param properties Le proprietà caricate.
+	 * @param className Il nome della classe della strategia.
 	 * @return Un'istanza di HitShipStrategy.
 	 */
-	private HitShipStrategy createStrategyInstance(Properties properties){
-		String className = properties.getProperty("hitShipStrategy");
+	private HitShipStrategy createStrategyInstance(String className) {
+		if (className == null || className.trim().isEmpty()) {
+			className = DEFAULT_STRATEGY;
+		}
 		try {
-			Class<?> hitShipStrategyClass = Class.forName(className);
-			return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
-
+			Class<?> clazz = Class.forName(className);
+			return (HitShipStrategy) clazz.getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e) {
-			// La classe non esiste allora ritorno la classe RandomHitShipStrategy che è la classe di default
-			try {
-				System.out.println("For hitShipStrategy --" + className + " is an invalid setup.");
-				Class<?> hitShipStrategyClass = Class.forName("model.strategy.RandomHitShipStrategy");
-				return (HitShipStrategy) hitShipStrategyClass.getDeclaredConstructor().newInstance();
-			} catch (Exception e1) {
-				throw new DomainException("strategy not found (HitShipFactory)", e1);
-			}
+			return fallbackStrategy("Class not found: " + className);
+		} catch (ReflectiveOperationException | ClassCastException e) {
+			throw new DomainException("Failed to create strategy instance for class: " + className, e);
+		}
+	}
 
+	/**
+	 * Metodo di fallback per creare un'istanza della strategia predefinita.
+	 *
+	 * @param message Il messaggio di errore da loggare.
+	 * @return Un'istanza di HitShipStrategy.
+	 */
+	private HitShipStrategy fallbackStrategy(String message) {
+		System.out.println(message + ". Falling back to default strategy.");
+		try {
+			Class<?> clazz = Class.forName(DEFAULT_STRATEGY);
+			return (HitShipStrategy) clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
-			throw new DomainException("strategy not found (HitShipFactory)", e);
+			throw new DomainException("Failed to create default strategy instance: " + DEFAULT_STRATEGY, e);
 		}
 	}
 }

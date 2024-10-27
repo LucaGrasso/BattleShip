@@ -11,12 +11,12 @@ import model.Direction;
 import model.ShipType;
 
 /**
- * Represents the main view for the BattleShip game.
- * Handles the interaction between the game frame and the settings frame.
+ * Rappresenta la vista principale per il gioco BattleShip.
+ * Gestisce l'interazione tra il frame di gioco e il frame delle impostazioni.
  *
  * @version 1.0
  */
-public class BattleShipGameView {
+public class BattleShipGameView implements IBattleShipGameView {
 
 	private static BattleShipGameView instance;
 	private GameFrame gameFrame;
@@ -24,8 +24,8 @@ public class BattleShipGameView {
 	private String playerName;
 
 	/**
-	 * Private constructor to implement Singleton pattern.
-	 * Launches the game frame and asks the player for their name.
+	 * Costruttore privato per implementare il pattern Singleton.
+	 * Lancia il frame di gioco e chiede al giocatore il suo nome.
 	 */
 	private BattleShipGameView() {
 		gameFrame = new GameFrame();
@@ -35,9 +35,9 @@ public class BattleShipGameView {
 	}
 
 	/**
-	 * Gets the single instance of BattleShipGameView.
+	 * Ottiene l'unica istanza di BattleShipGameView.
 	 *
-	 * @return single instance of BattleShipGameView
+	 * @return l'unica istanza di BattleShipGameView
 	 */
 	public static synchronized BattleShipGameView getInstance() {
 		if (instance == null) {
@@ -46,6 +46,9 @@ public class BattleShipGameView {
 		return instance;
 	}
 
+	/**
+	 * Aggiorna il tabellone di gioco. Ad esempio, quando il gioco viene resettato.
+	 */
 	public void updateGameBoard() {
 		// Resetta i pannelli della griglia e delle navi
 		gameFrame.closeApplication();
@@ -53,29 +56,26 @@ public class BattleShipGameView {
 		gameFrame.launch(this.playerName);
 		gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		gameFrame.setVisible(true);
-
-
-		//gameFrame.resetGameFrame(playerName);
 	}
 
 	/**
-	 * Displays a dialog to ask the player for their name.
+	 * Mostra una finestra di dialogo per chiedere il nome del giocatore.
 	 *
-	 * @return the player's name
+	 * @return il nome del giocatore
 	 */
 	public String askPlayerName() {
-		this.playerName = JOptionPane.showInputDialog("Enter your nickname/name?");
+		this.playerName = JOptionPane.showInputDialog("Inserisci il tuo nickname/nome:");
 		return playerName;
 	}
 
 	/**
-	 * Opens the settings frame.
+	 * Apre il frame delle impostazioni.
 	 */
 	public void openSettingsJFrame() {
 		settingsJFrame = SettingsJFrame.getInstance();
 		settingsJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		// Rimozione eventuali listener già esistenti
+		// Rimozione eventuale di listener già esistenti
 		for (WindowListener listener : settingsJFrame.getWindowListeners()) {
 			settingsJFrame.removeWindowListener(listener);
 		}
@@ -91,272 +91,272 @@ public class BattleShipGameView {
 	}
 
 	/**
-	 * Enables the settings button in the game frame.
+	 * Abilita il pulsante delle impostazioni nel frame di gioco.
 	 */
 	public void enableSettingsButton() {
 		this.getGameFrame().enableSettingsButton();
 	}
 
 	/**
-	 * Returns the player's name.
+	 * Restituisce il nome del giocatore.
 	 *
-	 * @return the player's name
+	 * @return il nome del giocatore
 	 */
 	public String getPlayerName() {
 		return playerName;
 	}
 
 	/**
-	 * Returns the first game board panel.
+	 * Restituisce il primo pannello del tabellone di gioco.
 	 *
-	 * @return the first game board panel
+	 * @return il primo pannello del tabellone di gioco
 	 */
 	public GameBoardJPanel getGameBoardPanel1() {
 		return this.getGameFrame().getGameBoardJPanel1();
 	}
 
 	/**
-	 * Returns the second game board panel.
+	 * Restituisce il secondo pannello del tabellone di gioco.
 	 *
-	 * @return the second game board panel
+	 * @return il secondo pannello del tabellone di gioco
 	 */
 	public GameBoardJPanel getGameBoardPanel2() {
 		return this.getGameFrame().getGameBoardJPanel2();
 	}
 
 	/**
-	 * Returns the size of the first game board.
+	 * Restituisce la dimensione del primo tabellone di gioco.
 	 *
-	 * @return the size of the first game board
+	 * @return la dimensione del primo tabellone di gioco
 	 */
 	public int getGameBoard1Size() {
 		return this.getGameBoardPanel1().getSquares().size();
 	}
 
 	/**
-	 * Returns the size of the second game board.
+	 * Restituisce la dimensione del secondo tabellone di gioco.
 	 *
-	 * @return the size of the second game board
+	 * @return la dimensione del secondo tabellone di gioco
 	 */
 	public int getGameBoard2Size() {
 		return this.getGameBoardPanel2().getSquares().size();
 	}
 
 	/**
-	 * Checks if a square in the second game board is clicked.
+	 * Verifica se una casella nel secondo tabellone di gioco è cliccata.
 	 *
-	 * @param i the index of the square
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 * @return true if the square is clicked, false otherwise
+	 * @param i l'indice della casella
+	 * @param x la coordinata x
+	 * @param y la coordinata y
+	 * @return true se la casella è cliccata, false altrimenti
 	 */
 	public boolean isClickedInGameBoard2(int i, int x, int y) {
 		return this.getGameBoardPanel2().getSquares().get(i).isClicked(x, y);
 	}
 
 	/**
-	 * Checks if a square in the first game board is clicked.
+	 * Verifica se una casella nel primo tabellone di gioco è cliccata.
 	 *
-	 * @param i the index of the square
-	 * @param x the x coordinate
-	 * @param y the y coordinate
-	 * @return true if the square is clicked, false otherwise
+	 * @param i l'indice della casella
+	 * @param x la coordinata x
+	 * @param y la coordinata y
+	 * @return true se la casella è cliccata, false altrimenti
 	 */
 	public boolean isClickedInGameBoard1(int i, int x, int y) {
 		return this.getGameBoardPanel1().getSquares().get(i).isClicked(x, y);
 	}
 
 	/**
-	 * Sets the color of a ship in the first game board.
+	 * Imposta il colore di una nave nel primo tabellone di gioco.
 	 *
-	 * @param number the number of the ship
-	 * @param color the color to set
+	 * @param number il numero della nave
+	 * @param color il colore da impostare
 	 */
 	public void colorShipGameBoardPanel1(int number, Color color) {
 		this.getGameBoardPanel1().setColor(number, color);
 	}
 
 	/**
-	 * Sets the color of a ship and its border in the first game board.
+	 * Imposta il colore di una nave e del suo bordo nel primo tabellone di gioco.
 	 *
-	 * @param number the number of the ship
-	 * @param borderColor the border color to set
-	 * @param color the color to set
+	 * @param number il numero della nave
+	 * @param borderColor il colore del bordo da impostare
+	 * @param color il colore da impostare
 	 */
 	public void colorRemoveShipGameBoardPanel1(int number, Color borderColor, Color color) {
 		this.getGameBoardPanel1().setColor(number, borderColor, color);
 	}
 
 	/**
-	 * Sets the color of a ship in the second game board.
+	 * Imposta il colore di una nave nel secondo tabellone di gioco.
 	 *
-	 * @param number the number of the ship
-	 * @param color the color to set
+	 * @param number il numero della nave
+	 * @param color il colore da impostare
 	 */
 	public void colorShipGameBoardPanel2(int number, Color color) {
 		this.getGameBoardPanel2().setColor(number, color);
 	}
 
 	/**
-	 * Checks if a square in the first game board is busy.
+	 * Verifica se una casella nel primo tabellone di gioco è occupata.
 	 *
-	 * @param number the number of the square
-	 * @return true if the square is busy, false otherwise
+	 * @param number il numero della casella
+	 * @return true se la casella è occupata, false altrimenti
 	 */
 	public boolean getSquareBusyGameBoardPanel1(int number) {
 		return this.getGameBoardPanel1().getSquares().get(number).getBusy();
 	}
 
 	/**
-	 * Checks if a square in the second game board is busy.
+	 * Verifica se una casella nel secondo tabellone di gioco è occupata.
 	 *
-	 * @param number the number of the square
-	 * @return true if the square is busy, false otherwise
+	 * @param number il numero della casella
+	 * @return true se la casella è occupata, false altrimenti
 	 */
 	public boolean getSquareBusyGameBoardPanel2(int number) {
 		return this.getGameBoardPanel2().getSquares().get(number).getBusy();
 	}
 
 	/**
-	 * Sets a square in the second game board as occupied.
+	 * Imposta una casella nel secondo tabellone di gioco come occupata.
 	 *
-	 * @param number the number of the square
+	 * @param number il numero della casella
 	 */
 	public void setSquareGameBoardPanel2_Occupied(int number) {
 		this.getGameBoardPanel2().getSquares().get(number).setBusy();
 	}
 
 	/**
-	 * Returns the selected ship type.
+	 * Restituisce il tipo di nave selezionato.
 	 *
-	 * @return the selected ship type
+	 * @return il tipo di nave selezionato
 	 */
 	public ShipType getSelectedShipType() {
 		return this.getGameFrame().getShipBoardPanel().getSelectedShipType();
 	}
 
 	/**
-	 * Returns the selected direction.
+	 * Restituisce la direzione selezionata.
 	 *
-	 * @return the selected direction
+	 * @return la direzione selezionata
 	 */
 	public Direction getSelectedDirection() {
 		return this.getGameFrame().getShipBoardPanel().getSelectedDirection();
 	}
 
 	/**
-	 * Returns the game frame.
+	 * Restituisce il frame di gioco.
 	 *
-	 * @return the game frame
+	 * @return il frame di gioco
 	 */
 	public GameFrame getGameFrame() {
 		return gameFrame;
 	}
 
 	/**
-	 * Displays an error message.
+	 * Mostra un messaggio di errore.
 	 *
-	 * @param message the error message to display
+	 * @param message il messaggio di errore da mostrare
 	 */
 	public void showError(String message) {
 		JOptionPane.showMessageDialog(null, message);
 	}
 
 	/**
-	 * Disables the start button.
+	 * Disabilita il pulsante di avvio.
 	 */
 	public void disableStartButton() {
 		this.getGameFrame().disableStartButton();
 	}
 
 	/**
-	 * Checks if the start button is enabled.
+	 * Verifica se il pulsante di avvio è abilitato.
 	 *
-	 * @return true if the start button is enabled, false otherwise
+	 * @return true se il pulsante di avvio è abilitato, false altrimenti
 	 */
 	public boolean isStartButtonEnabled() {
 		return this.getGameFrame().isStartButtonEnabled();
 	}
 
 	/**
-	 * Disables the settings button.
+	 * Disabilita il pulsante delle impostazioni.
 	 */
 	public void disableSettingsButton() {
 		this.getGameFrame().disableSettingsButton();
 	}
 
 	/**
-	 * Checks if the settings button is enabled.
+	 * Verifica se il pulsante delle impostazioni è abilitato.
 	 *
-	 * @return true if the settings button is enabled, false otherwise
+	 * @return true se il pulsante delle impostazioni è abilitato, false altrimenti
 	 */
 	public boolean isSettingsButtonEnabled() {
 		return this.getGameFrame().isSettingsButtonEnabled();
 	}
 
 	/**
-	 * Disables the first game board panel.
+	 * Disabilita il primo pannello del tabellone di gioco.
 	 */
 	public void disableGameBoardJPanel1() {
 		this.getGameFrame().disableGameBoardJPanel1();
 	}
 
 	/**
-	 * Checks if the first game board panel is enabled.
+	 * Verifica se il primo pannello del tabellone di gioco è abilitato.
 	 *
-	 * @return true if the first game board panel is enabled, false otherwise
+	 * @return true se il primo pannello del tabellone di gioco è abilitato, false altrimenti
 	 */
 	public boolean isGameBoardJPanel1Enabled() {
 		return this.getGameFrame().isGameBoardJPanel1Enabled();
 	}
 
 	/**
-	 * Updates the human player's name field.
+	 * Aggiorna il campo del nome del giocatore umano.
 	 *
-	 * @param n the new name
+	 * @param n il nuovo nome
 	 */
 	public void updateNameFieldHuman(String n) {
 		this.getGameFrame().updateNameFieldHuman(n);
 	}
 
 	/**
-	 * Updates the computer player's name field.
+	 * Aggiorna il campo del nome del giocatore computer.
 	 *
-	 * @param n the new name
+	 * @param n il nuovo nome
 	 */
 	public void updateNameFieldComputer(String n) {
 		this.getGameFrame().updateNameFieldComputer(n);
 	}
 
 	/**
-	 * Displays a message to the user.
+	 * Mostra un messaggio all'utente.
 	 *
-	 * @param message the message to display
+	 * @param message il messaggio da mostrare
 	 */
 	public void showMessage(String message) {
 		JOptionPane.showMessageDialog(null, message);
 	}
 
 	/**
-	 * Closes the application.
+	 * Chiude l'applicazione.
 	 */
 	public void closeApplication() {
 		this.getGameFrame().closeApplication();
 	}
 
 	/**
-	 * Checks if the ships are visible.
+	 * Verifica se le navi sono visibili.
 	 *
-	 * @return true if the ships are visible, false otherwise
+	 * @return true se le navi sono visibili, false altrimenti
 	 */
 	public boolean isShipsVisible() {
 		return settingsJFrame.shipsVisible();
 	}
 
 	/**
-	 * Returns the settings frame.
+	 * Restituisce il frame delle impostazioni.
 	 *
-	 * @return the settings frame
+	 * @return il frame delle impostazioni
 	 */
 	public SettingsJFrame getSettingsJFrame() {
 		return settingsJFrame;

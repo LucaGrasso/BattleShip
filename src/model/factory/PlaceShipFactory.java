@@ -12,31 +12,29 @@ import model.strategy.PlaceShipStrategy;
  * Classe che implementa il pattern Factory per creare istanze di strategie
  * di posizionamento delle navi.
  *
- * @version 1.0
+ * @version 1.1
  */
-public class PlaceShipFactory {
+public class PlaceShipFactory implements IPlaceShipFactory {
+    private static final String STRATEGY_PROPERTIES_FILE = "src/strategyProperties.properties";
     private final Properties properties;
 
     /**
      * Costruttore che inizializza le proprietà leggendo dal file di configurazione.
      */
     public PlaceShipFactory() {
-        this.properties = readPropertiesFile();
+        this.properties = new Properties();
+        loadProperties();
     }
 
     /**
      * Legge il file delle proprietà.
-     *
-     * @return Le proprietà lette dal file.
      */
-    private Properties readPropertiesFile() {
-        Properties properties = new Properties();
-        try (InputStream input = new FileInputStream("src/strategyProperties.properties")) {
+    private void loadProperties() {
+        try (InputStream input = new FileInputStream(STRATEGY_PROPERTIES_FILE)) {
             properties.load(input);
         } catch (IOException e) {
-            throw new DomainException("Cannot read properties file: " + "src/strategyProperties.properties", e);
+            throw new DomainException("Cannot read properties file: " + STRATEGY_PROPERTIES_FILE, e);
         }
-        return properties;
     }
 
     /**
@@ -47,6 +45,9 @@ public class PlaceShipFactory {
      */
     public PlaceShipStrategy getPlaceShipStrategy() {
         String className = properties.getProperty("placeShipStrategy");
+        if (className == null) {
+            throw new DomainException("Property 'placeShipStrategy' not found in " + STRATEGY_PROPERTIES_FILE);
+        }
         return createStrategyInstance(className);
     }
 
@@ -59,9 +60,15 @@ public class PlaceShipFactory {
      */
     private PlaceShipStrategy createStrategyInstance(String className) {
         try {
-            return (PlaceShipStrategy) Class.forName(className).getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new DomainException("Failed to create strategy instance for className: " + className, e);
+            Class<?> clazz = Class.forName(className);
+            if (!PlaceShipStrategy.class.isAssignableFrom(clazz)) {
+                throw new DomainException("Class " + className + " does not implement PlaceShipStrategy interface");
+            }
+            return (PlaceShipStrategy) clazz.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new DomainException("Class not found: " + className, e);
+        } catch (ClassCastException | ReflectiveOperationException e) {
+            throw new DomainException("Failed to create strategy instance for class: " + className, e);
         }
     }
 }
