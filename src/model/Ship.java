@@ -16,7 +16,7 @@ public class Ship {
 	private Direction shipDirection;
 	private ShipType shipType;
 
-	/**
+	/**A
 	 * Costruttore per la classe Ship.
 	 *
 	 * @param shipType      Il tipo di nave.
@@ -29,14 +29,6 @@ public class Ship {
 		this.setAllShipNumber(startPosition);
 	}
 
-	/**
-	 * Restituisce la posizione della nave.
-	 *
-	 * @return la posizione iniziale della nave.
-	 */
-	public int getShipPosition() {
-		return shipNumbers.get(0); // was getFirst, corrected
-	}
 
 	/**
 	 * Verifica se un determinato numero è presente nella nave.
@@ -83,8 +75,8 @@ public class Ship {
 	public ArrayList<Integer> getNumbersRandomShip() {
 		ArrayList<Integer> numbersRandom = new ArrayList<>();
 
-		int firstNumber = this.getShipNumbers().get(0); // was getFirst, corrected
-		int lastNumber = this.getShipNumbers().get(this.getShipNumbers().size() - 1); // was getLast, corrected
+		int firstNumber = this.getShipNumbers().getFirst(); // was getFirst, corrected
+		int lastNumber = this.getShipNumbers().getLast(); // was getLast, corrected
 
 		for (Integer integer : this.getShipNumbers()) {
 			if (integer.equals(firstNumber) || integer.equals(lastNumber)) {

@@ -31,7 +31,7 @@ public class GameController {
 	 * Metodo che configura il gioco, inizializzando vista e modello.
 	 */
 	public void setUpGame() {
-		view = new BattleShipGameView();
+		view = BattleShipGameView.getInstance();
 		model = new BattleShipGameModel(view.getPlayerName());
 		view.getGameBoardPanel1().addMouseClickListener(new MouseClickHandler());
 		view.getGameFrame().addMouseClickListenerToStartButton(new StartButtonHandler());
@@ -138,20 +138,36 @@ public class GameController {
 		 * Metodo che gestisce lo sparo del computer.
 		 */
 		public void computerShoots() {
-			int shot = model.getComputerShot();
+			int shot;
+
+			do {
+				shot = model.getComputerShot();
+			} while (shot < 0 || shot >= view.getGameBoard1Size());
 
 			if (humanPlayerShipNumbers.contains(shot)) {
 				if (model.addHitNumberToHumanPlayerShip(shot)) {
 					for (Integer shipNumber : model.allNumbersOfDestroyedShipsOfHumanPlayer()) {
-						view.colorShipGameBoardPanel1(shipNumber, Color.RED);
-						model.setIsShipSunk(true);
+						if (shipNumber >= 0 && shipNumber < view.getGameBoard1Size()) {
+							view.colorShipGameBoardPanel1(shipNumber, Color.RED);
+						} else {
+							view.showError("Indice nave distrutta fuori dai limiti: " + shipNumber);
+						}
 					}
+					model.setIsShipSunk(true);
 				} else {
-					view.colorShipGameBoardPanel1(shot, Color.YELLOW);
+					if (shot >= 0 && shot < view.getGameBoard1Size()) {
+						view.colorShipGameBoardPanel1(shot, Color.YELLOW);
+					} else {
+						view.showError("Indice centrale fuori dai limiti: " + shot);
+					}
 					model.setLastHitSuccessful(true);
 				}
 			} else {
-				view.colorShipGameBoardPanel1(shot, Color.BLUE);
+				if (shot >= 0 && shot < view.getGameBoard1Size()) {
+					view.colorShipGameBoardPanel1(shot, Color.BLUE);
+				} else {
+					view.showError("Indice occupato fuori dai limiti: " + shot);
+				}
 				model.setLastHitSuccessful(false);
 			}
 			updateNameFieldComputer();
@@ -181,11 +197,11 @@ public class GameController {
 	 * Metodo che gestisce la fine del gioco.
 	 */
 	public void endGame() {
-		int response = JOptionPane.showConfirmDialog(null, "Vuoi continuare a giocare?", "Fine del gioco",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		String[] options = { "Sì", "No" };
+		int response = JOptionPane.showOptionDialog(null, "Vuoi continuare a giocare?", "Fine del gioco",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 		if (response == JOptionPane.YES_OPTION) {
-			view.closeApplication();
 			this.setUpGame(); // imposta nuovamente il gioco se l'utente sceglie di continuare dall'inizio
 		} else {
 			view.closeApplication(); // chiude l'applicazione se l'utente sceglie di no

@@ -28,12 +28,12 @@ import model.strategy.PlaceStrategy;
 public class SettingsJFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	private static SettingsJFrame instance; // Istanza unica
 
 	private JButton confirmButton;
 	private JComboBox<HitStrategy> hitComboBox;
 	private JComboBox<PlaceStrategy> placeComboBox;
 	private JComboBox<String> shipVisibilityBox;
-
 	private boolean isShipsVisible = false;
 
 	public final static int HEIGHT_FRAME = 500;
@@ -41,16 +41,30 @@ public class SettingsJFrame extends JFrame {
 
 	/**
 	 * Costruisce un oggetto SettingsJFrame e inizializza i suoi componenti.
+	 * Il costruttore è privato per implementare il pattern Singleton.
 	 */
-	public SettingsJFrame() {
+	private SettingsJFrame() {
 		super();
 		this.launch();
 	}
 
 	/**
+	 * Restituisce l'istanza unica di SettingsJFrame.
+	 * Se non esiste, la crea.
+	 *
+	 * @return l'istanza unica di SettingsJFrame
+	 */
+	public static synchronized SettingsJFrame getInstance() {
+		if (instance == null) {
+			instance = new SettingsJFrame();
+		}
+		return instance;
+	}
+
+	/**
 	 * Inizializza le proprietà e i componenti del frame.
 	 */
-	public void launch() {
+	private void launch() {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setSize(WIDTH_FRAME, HEIGHT_FRAME);
 		this.setLocationRelativeTo(null);
@@ -62,10 +76,8 @@ public class SettingsJFrame extends JFrame {
 		this.completeLabelHitStrategy();
 		this.completeBoxHitStrategy();
 		this.completeConfirmButton();
-
 		this.completeBoxPlaceStrategy();
 		this.completeLabelPlaceStrategy();
-
 		this.completeShipsVisibleLabel();
 		this.completeShipsVisibleBox();
 
@@ -81,6 +93,7 @@ public class SettingsJFrame extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				BattleShipGameView.getInstance().enableSettingsButton();
 				dispose();
 			}
 		});
@@ -164,6 +177,9 @@ public class SettingsJFrame extends JFrame {
 			if (selectedPlaceStrategy != null) {
 				writePlaceToProperties(selectedPlaceStrategy.getFullClassName());
 			}
+
+			// Chiama il metodo per abilitare il pulsante prima di chiudere la finestra
+			BattleShipGameView.getInstance().enableSettingsButton();
 			this.dispose();
 		});
 	}

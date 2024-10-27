@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -17,20 +18,34 @@ import model.ShipType;
  */
 public class BattleShipGameView {
 
+	private static BattleShipGameView instance;
 	private final GameFrame gameFrame;
 	private SettingsJFrame settingsJFrame;
 	private String playerName;
 
 	/**
-	 * Constructs a BattleShipGameView.
+	 * Private constructor to implement Singleton pattern.
 	 * Launches the game frame and asks the player for their name.
 	 */
-	public BattleShipGameView() {
+	private BattleShipGameView() {
 		gameFrame = new GameFrame();
 		gameFrame.launch(this.askPlayerName());
 		gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
+
+	/**
+	 * Gets the single instance of BattleShipGameView.
+	 *
+	 * @return single instance of BattleShipGameView
+	 */
+	public static synchronized BattleShipGameView getInstance() {
+		if (instance == null) {
+			instance = new BattleShipGameView();
+		}
+		return instance;
+	}
+
 
 	/**
 	 * Displays a dialog to ask the player for their name.
@@ -46,14 +61,21 @@ public class BattleShipGameView {
 	 * Opens the settings frame.
 	 */
 	public void openSettingsJFrame() {
-		settingsJFrame = new SettingsJFrame();
+		settingsJFrame = SettingsJFrame.getInstance();
 		settingsJFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		// Rimozione eventuali listener già esistenti
+		for (WindowListener listener : settingsJFrame.getWindowListeners()) {
+			settingsJFrame.removeWindowListener(listener);
+		}
+
 		settingsJFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				enableSettingsButton();  // Il pulsante delle impostazioni sarà riabilitato qui
 			}
 		});
+
 		settingsJFrame.setVisible(true);
 	}
 
@@ -317,7 +339,7 @@ public class BattleShipGameView {
 	 * @return true if the ships are visible, false otherwise
 	 */
 	public boolean isShipsVisible() {
-		return this.settingsJFrame.shipsVisible();
+		return settingsJFrame.shipsVisible();
 	}
 
 	/**
@@ -326,6 +348,6 @@ public class BattleShipGameView {
 	 * @return the settings frame
 	 */
 	public SettingsJFrame getSettingsJFrame() {
-		return this.settingsJFrame;
+		return settingsJFrame;
 	}
 }

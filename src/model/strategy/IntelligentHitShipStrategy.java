@@ -66,6 +66,11 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
      * @return la posizione del prossimo colpo.
      */
     @Override
+    /**
+     * Calcola la posizione del prossimo colpo.
+     *
+     * @return la posizione del prossimo colpo.
+     */
     public int getHitPositionShip() {
         int result = -1;
 
@@ -97,6 +102,10 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                     int hitTemp = 0;
                     while (result == -1) {
                         hitTemp = getRandomAdjacent(tempSeq);
+                        if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
+                            result = -1; // o qualche logica alternativa
+                            break;
+                        }
                         result = addHitPosition(hitTemp * 10 + rowDirection);
                     }
                     sequenceDigits.add(hitTemp);
@@ -107,6 +116,10 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                     int hitTemp = 0;
                     while (result == -1) {
                         hitTemp = getRandomAdjacent(tempSeq);
+                        if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
+                            result = -1; // o qualche logica alternativa
+                            break;
+                        }
                         result = addHitPosition(columnDirection * 10 + hitTemp);
                     }
                     sequenceDigits.add(hitTemp);
@@ -123,6 +136,10 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                 int hitTemp = 0;
                 while (result == -1) {
                     hitTemp = getRandomAdjacent(tempSeq);
+                    if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
+                        result = -1; // o qualche logica alternativa
+                        break;
+                    }
                     result = addHitPosition(hitTemp * 10 + rowDirection);
                 }
                 sequenceDigits.add(hitTemp);
@@ -132,6 +149,10 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                 int hitTemp = 0;
                 while (result == -1) {
                     hitTemp = getRandomAdjacent(tempSeq);
+                    if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
+                        result = -1; // o qualche logica alternativa
+                        break;
+                    }
                     result = addHitPosition(columnDirection * 10 + hitTemp);
                 }
                 sequenceDigits.add(hitTemp);
@@ -250,9 +271,9 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
             options.add(max + 1);
         }
 
-        // Se non ci sono opzioni disponibili, lancia un'eccezione o gestisci il caso
+        // Se non ci sono opzioni disponibili, restituisce un valore "segnaposto" come -1
         if (options.isEmpty()) {
-            throw new RuntimeException("No adjacent numbers available.");
+            return -1;
         }
 
         // Scegli un numero casuale dalle opzioni

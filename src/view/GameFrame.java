@@ -90,7 +90,9 @@ public class GameFrame extends JFrame {
 	 * Abilita il pulsante delle impostazioni.
 	 */
 	public void enableSettingsButton() {
-		this.settingsButton.setEnabled(true);
+		if (!this.settingsButton.isEnabled()) {
+			this.settingsButton.setEnabled(true);
+		}
 	}
 
 	/**
