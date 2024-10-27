@@ -16,7 +16,7 @@ import javax.swing.*;
  *
  * @version 1.0
  */
-public class GameController implements IGameController {
+public class GameController {
 	private BattleShipGameModel model;
 	private BattleShipGameView view;
 
@@ -30,7 +30,7 @@ public class GameController implements IGameController {
 	/**
 	 * Metodo che configura il gioco, inizializzando vista e modello.
 	 */
-	public void setUpGame() {
+	private void setUpGame() {
 		view = BattleShipGameView.getInstance();
 		model = new BattleShipGameModel(view.getPlayerName());
 		view.getGameBoardPanel1().addMouseClickListener(new MouseClickHandler());
@@ -182,21 +182,21 @@ public class GameController implements IGameController {
 	/**
 	 * Aggiorna il campo del nome del giocatore umano.
 	 */
-	public void updateNameFieldHuman() {
+	private void updateNameFieldHuman() {
 		view.updateNameFieldHuman(model.getHumanPlayerName() + " (" + model.getHumanPlayerScore() + "):");
 	}
 
 	/**
 	 * Aggiorna il campo del nome del computer.
 	 */
-	public void updateNameFieldComputer() {
+	private void updateNameFieldComputer() {
 		view.updateNameFieldComputer(model.getComputerPlayerName() + " (" + model.getComputerPlayerScore() + "):");
 	}
 
 	/**
 	 * Metodo che gestisce la fine del gioco.
 	 */
-	public void endGame() {
+	private void endGame() {
 		String[] options = { "Sì", "No" };
 		int response = JOptionPane.showOptionDialog(null, "Vuoi continuare a giocare?", "Fine del gioco",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);

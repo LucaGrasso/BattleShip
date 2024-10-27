@@ -1,29 +1,35 @@
-/**
- * @author Luca Grasso
- * @matricola 294612
- * @progetto PMO
- * @data 27/05/2024
- */
-
 package model.strategy;
 
 import java.util.*;
 
 /**
  * Classe che implementa la strategia di colpire navi in modo intelligente.
+ * Gestisce colpi basati su logica di adiacenza e orientamento della nave.
+ * Assicura che non vengano eseguiti colpi fuori dai limiti della griglia (0-99).
  */
 public class IntelligentHitShipStrategy implements HitShipStrategy {
 
+    /** Lista delle posizioni colpite */
     private final List<Integer> hitPositionsList = new ArrayList<>();
+    /** Ultima posizione colpita con successo */
     private Integer lastHit = null;
+    /** Direzione del colpo */
     private Integer hitDirection;
+    /** Indica se l'ultimo colpo è stato un successo */
     private boolean isLastHitSuccessful = false;
+    /** Indica se una nave è stata affondata */
     private boolean isShipSunk = false;
+    /** Indica se è stato colpito una nave per la prima volta */
     private boolean firstHitShip = false;
+    /** Orientamento della nave colpita (orizzontale o verticale) */
     private String shipOrientation = null;
+    /** Direzione per righe, usata per colpi orizzontali */
     private int rowDirection = -1;
+    /** Direzione per colonne, usata per colpi verticali */
     private int columnDirection = -1;
+    /** Sequenza dei numeri delle posizioni colpite */
     private List<Integer> sequenceDigits = new ArrayList<>();
+    /** Lista delle posizioni della nave colpita */
     private final List<Integer> hitShip = new ArrayList<>();
 
     /**
@@ -66,22 +72,15 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
      * @return la posizione del prossimo colpo.
      */
     @Override
-    /**
-     * Calcola la posizione del prossimo colpo.
-     *
-     * @return la posizione del prossimo colpo.
-     */
     public int getHitPositionShip() {
         int result = -1;
 
-        // Se la nave è affondata, resettiamo la strategia
         if (isShipSunk) {
             hitShip.add(lastHit);
             addPointNearShipSunk();
             getReset();
         }
 
-        // Ho colpito due volte la stessa nave
         if (firstHitShip && isLastHitSuccessful) {
             if (shipOrientation == null) {
                 int[] digitsForDirection = compareDigits(hitDirection, lastHit);
@@ -97,32 +96,9 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                 }
             } else {
                 if (shipOrientation.equals("horizontal")) {
-                    hitShip.add(lastHit);
-                    int[] tempSeq = convertListToArray(sequenceDigits);
-                    int hitTemp = 0;
-                    while (result == -1) {
-                        hitTemp = getRandomAdjacent(tempSeq);
-                        if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
-                            result = -1; // o qualche logica alternativa
-                            break;
-                        }
-                        result = addHitPosition(hitTemp * 10 + rowDirection);
-                    }
-                    sequenceDigits.add(hitTemp);
-
+                    result = processHitsInDirection(rowDirection, true);
                 } else if (shipOrientation.equals("vertical")) {
-                    hitShip.add(lastHit);
-                    int[] tempSeq = convertListToArray(sequenceDigits);
-                    int hitTemp = 0;
-                    while (result == -1) {
-                        hitTemp = getRandomAdjacent(tempSeq);
-                        if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
-                            result = -1; // o qualche logica alternativa
-                            break;
-                        }
-                        result = addHitPosition(columnDirection * 10 + hitTemp);
-                    }
-                    sequenceDigits.add(hitTemp);
+                    result = processHitsInDirection(columnDirection, false);
                 }
             }
         } else if (firstHitShip) {
@@ -132,48 +108,22 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                     result = addHitPosition(temp);
                 }
             } else if (shipOrientation.equals("horizontal")) {
-                int[] tempSeq = convertListToArray(sequenceDigits);
-                int hitTemp = 0;
-                while (result == -1) {
-                    hitTemp = getRandomAdjacent(tempSeq);
-                    if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
-                        result = -1; // o qualche logica alternativa
-                        break;
-                    }
-                    result = addHitPosition(hitTemp * 10 + rowDirection);
-                }
-                sequenceDigits.add(hitTemp);
-
+                result = processHitsInDirection(rowDirection, true);
             } else if (shipOrientation.equals("vertical")) {
-                int[] tempSeq = convertListToArray(sequenceDigits);
-                int hitTemp = 0;
-                while (result == -1) {
-                    hitTemp = getRandomAdjacent(tempSeq);
-                    if (hitTemp == -1) { // Gestiamo il caso di nessun adiacente trovato
-                        result = -1; // o qualche logica alternativa
-                        break;
-                    }
-                    result = addHitPosition(columnDirection * 10 + hitTemp);
-                }
-                sequenceDigits.add(hitTemp);
+                result = processHitsInDirection(columnDirection, false);
             }
         }
 
         if (lastHit != null && isLastHitSuccessful && result == -1) {
-            // Ho colpito una nave per la prima volta
             if (!firstHitShip) firstHitShip = true;
-            // Verificare se possiamo colpire in quella direzione
             this.hitDirection = lastHit;
             this.hitShip.add(hitDirection);
             while (result == -1) {
-                // Generiamo un numero casuale (0-99)
                 int temp = getAroundLastHit(lastHit);
-                // Aggiungo alla lista di hit
                 result = addHitPosition(temp);
             }
         }
 
-        // Se non abbiamo una direzione o non abbiamo colpito una nave, generiamo una hit casuale
         while (result == -1) {
             int temp = (int) (Math.random() * 100);
             result = addHitPosition(temp);
@@ -182,13 +132,13 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
     }
 
     /**
-     * Aggiungi la posizione di hit alla lista di hit.
+     * Aggiunge la posizione colpita alla lista, se non è già presente e se è valida.
      *
      * @param hitPosition la posizione da aggiungere.
-     * @return int la posizione di hit, o -1 se già presente.
+     * @return la posizione del colpo, o -1 se già presente o non valida.
      */
     private int addHitPosition(int hitPosition) {
-        if (!hitPositionsList.contains(hitPosition)) {
+        if (hitPosition >= 0 && hitPosition < 100 && !hitPositionsList.contains(hitPosition)) {
             hitPositionsList.add(hitPosition);
             lastHit = hitPosition;
             return hitPosition;
@@ -197,100 +147,71 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
     }
 
     /**
-     * Ottiene una posizione attorno all'ultima posizione di hit.
+     * Ottiene una posizione casuale attorno all'ultima posizione colpita, rispettando i limiti della griglia.
      *
-     * @param lastHit l'ultima posizione di hit.
+     * @param lastHit l'ultima posizione colpita.
      * @return la nuova posizione attorno all'ultima posizione di hit.
      */
     private int getAroundLastHit(int lastHit) {
         Random random = new Random();
         String[] directions = {"up", "down", "right", "left"};
-        int rowDigit;
-        int columnDigit;
-
+        int rowDigit = lastHit % 10;
+        int columnDigit = lastHit / 10;
         int index = random.nextInt(directions.length);
 
-        if (lastHit >= 0 && lastHit <= 9) {
-            rowDigit = lastHit;
-
-            // Border Left of Game
-            switch (directions[index]) {
-                case "up":
-                    return (rowDigit == 0) ? --rowDigit : ++rowDigit;
-                case "down":
-                    return (rowDigit == 9) ? ++rowDigit : --rowDigit;
-                case "right":
-                case "left":
-                    return 10 + rowDigit;
-            }
-
-        } else {
-            rowDigit = Math.abs(lastHit % 10);   // 0-9
-            columnDigit = Math.abs(lastHit / 10); // 0-9
-
-            switch (directions[index]) {
-                case "up":
-                    if (rowDigit == 0) return ++rowDigit + columnDigit * 10;
-                    return --rowDigit + columnDigit * 10;
-                case "down":
-                    if (rowDigit == 9) return --rowDigit + columnDigit * 10;
-                    return ++rowDigit + columnDigit * 10;
-                case "right":
-                    if (columnDigit == 9) return rowDigit + --columnDigit * 10;
-                    return rowDigit + --columnDigit * 10;
-                case "left":
-                    if (columnDigit == 0) return rowDigit;
-                    return rowDigit + ++columnDigit * 10;
-            }
+        switch (directions[index]) {
+            case "up":
+                if (rowDigit > 0) return lastHit - 1;
+                break;
+            case "down":
+                if (rowDigit < 9) return lastHit + 1;
+                break;
+            case "right":
+                if (columnDigit < 9) return lastHit + 10;
+                break;
+            case "left":
+                if (columnDigit > 0) return lastHit - 10;
+                break;
         }
         return -1;
     }
 
     /**
-     * Ottiene una posizione adiacente casuale alla sequenza fornita.
+     * Ottiene una posizione adiacente casuale alla sequenza fornita, rispettando i limiti della griglia.
      *
      * @param sequence la sequenza di riferimento.
-     * @return una posizione adiacente casuale.
+     * @return una posizione adiacente casuale o -1 se non disponibile.
      */
     private static int getRandomAdjacent(int[] sequence) {
-        // Ordina l'array e trova il min e il max
         Arrays.sort(sequence);
         int min = sequence[0];
         int max = sequence[sequence.length - 1];
 
-        // Crea una lista per contenere le potenziali opzioni
         List<Integer> options = new ArrayList<>();
 
-        // Se c'è un numero prima del min, aggiungilo alle opzioni
         if (min > 0) {
             options.add(min - 1);
         }
-
-        // Se c'è un numero dopo il max, aggiungilo alle opzioni
         if (max < 9) {
             options.add(max + 1);
         }
 
-        // Se non ci sono opzioni disponibili, restituisce un valore "segnaposto" come -1
         if (options.isEmpty()) {
             return -1;
         }
 
-        // Scegli un numero casuale dalle opzioni
         Random rand = new Random();
-        int index = rand.nextInt(options.size());
-        return options.get(index);
+        return options.get(rand.nextInt(options.size()));
     }
 
     /**
-     * Confronta le cifre della direzione del colpo con l'ultimo colpo.
+     * Confronta le cifre della direzione del colpo con quelle dell'ultimo colpo.
      *
      * @param hitDirection la direzione del colpo.
      * @param lastHit l'ultimo colpo.
      * @return un array con le cifre che corrispondono.
      */
     private int[] compareDigits(int hitDirection, int lastHit) {
-        // Inizializza con -1 per denotare "nessuna corrispondenza"
         int[] result = {-1, -1};
 
         int firstDigitDirection = Math.abs(hitDirection / 10);
@@ -308,34 +229,7 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
     }
 
     /**
-     * Ottiene la sequenza di cifre dalla direzione del colpo e dall'ultimo colpo.
-     *
-     * @param hitDirection la direzione del colpo.
-     * @param lastHit l'ultimo colpo.
-     * @return un array con la sequenza di cifre.
-     */
-    private int[] sequenceDigits(int hitDirection, int lastHit) {
-        int[] result = {-1, -1};
-
-        int firstDigitDirection = Math.abs(hitDirection / 10);
-        int secondDigitDirection = Math.abs(hitDirection % 10);
-
-        int firstDigitLastHit = Math.abs(lastHit / 10);
-        int secondDigitLastHit = Math.abs(lastHit % 10);
-
-        if (firstDigitDirection != firstDigitLastHit) {
-            result[0] = firstDigitDirection;
-            result[1] = firstDigitLastHit;
-        }
-        if (secondDigitDirection != secondDigitLastHit) {
-            result[0] = secondDigitDirection;
-            result[1] = secondDigitLastHit;
-        }
-        return result;
-    }
-
-    /**
-     * Prova a colpire una nave in base alla direzione e all'ultimo colpo.
+     * Tenta di colpire una nave in base alla direzione e all'ultimo colpo.
      *
      * @param hitDirection la direzione del colpo.
      * @param lastHit l'ultimo colpo.
@@ -344,9 +238,11 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
     private int tryHitShip(int hitDirection, int lastHit) {
         int result = -1;
         hitShip.add(lastHit);
-        int[] sequenceDigitsResult = sequenceDigits(hitDirection, lastHit);
-        sequenceDigits.add(sequenceDigitsResult[0]);
-        sequenceDigits.add(sequenceDigitsResult[1]);
+        // Usiamo compareDigits per ottenere l'orientamento corretto
+        int[] digitsForDirection = compareDigits(hitDirection, lastHit);
+        sequenceDigits.add(digitsForDirection[0]);
+        sequenceDigits.add(digitsForDirection[1]);
+
         int hitTemp = 0;
         while (result == -1) {
             hitTemp = getRandomAdjacent(sequenceDigits.stream().mapToInt(i -> i).toArray());
@@ -354,6 +250,31 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
                 result = addHitPosition(columnDirection * 10 + hitTemp);
             if (Objects.equals(shipOrientation, "horizontal"))
                 result = addHitPosition(hitTemp * 10 + rowDirection);
+        }
+        sequenceDigits.add(hitTemp);
+        return result;
+    }
+
+    /**
+     * Esegue i colpi in base alla direzione (orizzontale o verticale) della nave.
+     *
+     * @param direction la direzione del colpo (riga o colonna).
+     * @param isHorizontal se vero, il colpo è orizzontale, altrimenti è verticale.
+     * @return la posizione del colpo, o -1 se non valida.
+     */
+    private int processHitsInDirection(int direction, boolean isHorizontal) {
+        int result = -1;
+        hitShip.add(lastHit);
+        int[] tempSeq = convertListToArray(sequenceDigits);
+        int hitTemp = 0;
+        while (result == -1) {
+            hitTemp = getRandomAdjacent(tempSeq);
+            if (hitTemp == -1) break;
+            if (isHorizontal) {
+                result = addHitPosition(hitTemp * 10 + direction);
+            } else {
+                result = addHitPosition(direction * 10 + hitTemp);
+            }
         }
         sequenceDigits.add(hitTemp);
         return result;
@@ -374,32 +295,42 @@ public class IntelligentHitShipStrategy implements HitShipStrategy {
     }
 
     /**
-     * Aggiunge i punti vicini alla nave affondata.
+     * Aggiunge i punti vicini alla nave affondata, evitando quelli fuori dai limiti.
      */
     private void addPointNearShipSunk() {
         for (int hitPosition : hitShip) {
-            int rowDigit = Math.abs(hitPosition % 10);
-            int columnDigit = Math.abs(hitPosition / 10);
+            int rowDigit = hitPosition % 10;
+            int columnDigit = hitPosition / 10;
 
             List<Integer> adjacentPoints = new ArrayList<>();
-            int up = (rowDigit == 0) ? -1 : hitPosition - 1;
-            int upRight = (rowDigit == 0 || columnDigit == 9) ? -1 : hitPosition - 1 + 10;
-            int upLeft = (rowDigit == 0 || columnDigit == 0) ? -1 : hitPosition - 1 - 10;
-            int down = (rowDigit == 9) ? -1 : hitPosition + 1;
-            int downRight = (rowDigit == 9 || columnDigit == 9) ? -1 : hitPosition + 1 + 10;
-            int downLeft = (rowDigit == 9 || columnDigit == 0) ? -1 : hitPosition + 1 - 10;
-            int right = (columnDigit == 9) ? -1 : hitPosition + 10;
-            int left = (columnDigit == 0) ? -1 : hitPosition - 10;
+            int up = (rowDigit > 0) ? hitPosition - 1 : -1;
+            int down = (rowDigit < 9) ? hitPosition + 1 : -1;
+            int right = (columnDigit < 9) ? hitPosition + 10 : -1;
+            int left = (columnDigit > 0) ? hitPosition - 10 : -1;
 
-            Collections.addAll(adjacentPoints, up, upRight, upLeft, down, downRight, downLeft, right, left);
+            addIfValid(adjacentPoints, up);
+            addIfValid(adjacentPoints, down);
+            addIfValid(adjacentPoints, right);
+            addIfValid(adjacentPoints, left);
 
-            for (int hole : adjacentPoints) {
-                if (hole == -1) continue;
-                if (!hitPositionsList.contains(hole)) {
-                    hitPositionsList.add(hole);
+            for (int point : adjacentPoints) {
+                if (!hitPositionsList.contains(point)) {
+                    hitPositionsList.add(point);
                 }
             }
         }
         hitShip.clear();
+    }
+
+    /**
+     * Aggiunge un punto alla lista se è valido.
+     *
+     * @param points la lista dei punti.
+     * @param point il punto da aggiungere.
+     */
+    private void addIfValid(List<Integer> points, int point) {
+        if (point >= 0 && point < 100) {
+            points.add(point);
+        }
     }
 }
