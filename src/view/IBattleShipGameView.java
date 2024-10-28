@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Color;
-import javax.swing.JFrame;
 import model.Direction;
 import model.ShipType;
 
