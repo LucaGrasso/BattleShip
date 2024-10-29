@@ -260,12 +260,10 @@ public abstract class BasePlayer implements Player {
      */
     @Override
     public Ship getShipByNumber(int number) {
-        for (Ship ship : ships) {
-            if (ship.isNumberInShip(number)) {
-                return ship;
-            }
-        }
-        return null;
+        return ships.stream()
+                .filter(ship -> ship.isNumberInShip(number))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -274,7 +272,7 @@ public abstract class BasePlayer implements Player {
      * @return L'ultima nave aggiunta, o null se la lista è vuota
      */
     public Ship getlastAddedShip() {
-        return ships.get(ships.size() - 1);
+        return ships.getLast();
     }
 
     /**
