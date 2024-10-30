@@ -1,11 +1,11 @@
-# SDK - Java 22
-# JUNIT 5
-# Sviluppato con intelij IDEA
-
 ### BattleShip -- Progetto-PMO
 Progetto Programmazione e Modellazione ad Oggetti   
 Università di Urbino "Carlo Bo", 2023\2024  
 Luca Grasso - 294612
+
+### Requisiti
+- Java Development Kit (JDK) 22.0.1
+- Un ambiente di sviluppo integrato (IDE) come IntelliJ IDEA è raccomandato, ma non obbligatorio.
 
 ### Specifica del progetto
 
