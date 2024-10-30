@@ -1,4 +1,6 @@
-"# BattleShip---Project-OO"
+# SDK - Java 22
+# JUNIT 5
+# Sviluppato con intelij IDEA
 
 ### BattleShip -- Progetto-PMO
 Progetto Programmazione e Modellazione ad Oggetti   

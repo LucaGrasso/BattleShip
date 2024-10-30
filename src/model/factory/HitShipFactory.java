@@ -17,9 +17,12 @@ import java.util.Properties;
  * @version 1.0
  */
 public class HitShipFactory implements IHitShipFactory {
-	private static final String PROPS_PATH = "src/strategyProperties.properties";
+	private static final String PROPS_PATH = "./strategyProperties.properties";
 	private static final String STRATEGY_PROP = "hitShipStrategy";
 	private static final String DEFAULT_STRATEGY = "model.strategy.RandomHitShipStrategy";
+
+	private static final String STRATEGY_PROP2 = "placeShipStrategy";
+	private static final String DEFAULT_STRATEGY2 = "model.strategy.HardPlaceShipStrategy";
 
 	/**
 	 * Restituisce un'istanza della strategia di colpire le navi caricando le proprietà
@@ -41,7 +44,9 @@ public class HitShipFactory implements IHitShipFactory {
 		if (!Files.exists(propsFilePath)) {
 			try (FileWriter writer = new FileWriter(PROPS_PATH)) {
 				Properties properties = new Properties();
+				// Set default values for all properties
 				properties.setProperty(STRATEGY_PROP, DEFAULT_STRATEGY);
+				properties.setProperty(STRATEGY_PROP2, DEFAULT_STRATEGY2);
 				properties.store(writer, "Properties for BattleShip Game");
 			} catch (IOException e) {
 				throw new RuntimeException("Error creating properties file", e);

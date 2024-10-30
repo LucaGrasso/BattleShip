@@ -15,7 +15,7 @@ import model.strategy.PlaceShipStrategy;
  * @version 1.1
  */
 public class PlaceShipFactory implements IPlaceShipFactory {
-    private static final String STRATEGY_PROPERTIES_FILE = "src/strategyProperties.properties";
+    private static final String STRATEGY_PROPERTIES_FILE = "./strategyProperties.properties";
     private final Properties properties;
 
     /**
